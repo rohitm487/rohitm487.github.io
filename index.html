@@ -150,6 +150,24 @@
     h2 > i { margin-right: 0.75rem; }
     .card { background: var(--bg-lighter); border: 1px solid var(--card-border); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.25rem; }
 
+    /* --- ADDED: Grid Layout Fixes --- */
+    .project-grid, .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    /* Ensure cards inside grids behave correctly */
+    .project-grid .card, .video-grid .card {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 0; /* Remove margin since gap is used */
+    }
+    .project-grid .card p {
+      flex-grow: 1; /* Allow description to fill space */
+    }
+
+
+
     /* --- RESPONSIVE ADJUSTMENTS --- */
     
     @media (max-width: 1024px) {
@@ -263,7 +281,7 @@
         <button class="toggle" id="theme-toggle" aria-label="Toggle theme">Toggle Theme</button>
     </div>
     </aside>
-    
+
   <main>
     <div class="top-right-section">
       <div class="search-bar">
