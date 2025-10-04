@@ -6,36 +6,39 @@
   <title>Rohit Kumar Mishra | AI Engineer</title>
   <meta name="description" content="Portfolio of Rohit Kumar Mishra, an AI Engineer specializing in LLMs, MLOps, and scalable AI solutions.">
   <link rel="icon" href="favicon.png">
-  <script src="https://cdn.jsdelivr.net/npm/minisearch@6.3.0/dist/umd/index.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js"></script>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <style>
-    /* Color Variables */
+    /* Color Variables for Dark and Light Theme */
     :root {
-      --bg: #0d1117;
-      --bg-lighter: #161b22;
-      --text: #c9d1d9;
-      --accent: #58a6ff;
-      --muted: #8b949e;
+      --bg: #0d1117; /* Dark background */
+      --bg-lighter: #161b22; /* Sidebar background */
+      --text: #c9d1d9; /* Light text */
+      --accent: #58a6ff; /* Blue accent */
+      --muted: #8b949e; /* Muted gray for borders/secondary text */
       --link-color: #58a6ff;
-      --card-border: #30363d;
-      --highlight-bg: rgba(88, 166, 255, 0.2);
+      --card-border: #30363d; /* Card border in dark mode */
     }
 
     body.light {
-      --bg: #ffffff;
-      --bg-lighter: #f6f8fa;
-      --text: #24292e;
-      --accent: #0366d6;
-      --muted: #586069;
+      --bg: #ffffff; /* Light background */
+      --bg-lighter: #f6f8fa; /* Sidebar background */
+      --text: #24292e; /* Dark text */
+      --accent: #0366d6; /* Blue accent */
+      --muted: #586069; /* Muted gray */
       --link-color: #0366d6;
-      --card-border: #e1e4e8;
-      --highlight-bg: rgba(3, 102, 214, 0.15);
+      --card-border: #e1e4e8; /* Card border in light mode */
     }
 
     /* Base Styles */
-    *, *::before, *::after { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       font-family: 'Fira Code', monospace;
@@ -50,14 +53,23 @@
     a {
       color: var(--link-color);
       text-decoration: none;
-      transition: color 0.2s;
     }
-    a:hover { text-decoration: underline; color: var(--accent); }
-    mark { background-color: var(--highlight-bg); color: inherit; padding: 2px 0; border-radius: 3px; }
+    a:hover {
+      text-decoration: underline;
+      color: var(--accent);
+    }
+
+    mark {
+        background-color: var(--highlight-bg);
+        color: inherit;
+        padding: 2px 0;
+        border-radius: 3px;
+    }
 
     /* Sidebar */
     aside {
-      width: clamp(260px, 22vw, 300px);
+      /* MODIFIED: Changed fixed width to a flexible, clamped width */
+      width: clamp(250px, 22vw, 300px);
       background: var(--bg-lighter);
       padding: 2rem 1.5rem;
       position: sticky;
@@ -65,12 +77,20 @@
       height: 100vh;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
       flex-shrink: 0;
       border-right: 1px solid var(--card-border);
       overflow-y: auto;
     }
-    .sidebar-content { flex-grow: 1; }
-    .avatar { text-align: center; margin-bottom: 1.5rem; }
+
+    .sidebar-content {
+        flex-grow: 1;
+    }
+
+    .avatar {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
     .avatar img {
       width: 120px;
       height: 120px;
@@ -78,63 +98,111 @@
       border: 3px solid var(--accent);
       object-fit: cover;
     }
-    .name { font-size: 1.5em; font-weight: 600; margin: 0.5rem 0 0.2rem; text-align: center; color: var(--accent); }
-    .bio { font-size: 0.9em; margin: 0.2rem 0; color: var(--muted); text-align: center; }
-    .social-links { padding: 1.5rem 0; text-align: center; }
-    .social-links a { color: var(--muted); margin: 0 0.6rem; font-size: 1.2em; transition: color 0.2s; }
-    .social-links a:hover { color: var(--accent); text-decoration: none; }
-    nav ul { list-style: none; padding: 0; margin: 0; }
-    nav li { margin: 0.5rem 0; }
+
+    .name {
+      font-size: 1.5em;
+      font-weight: 600;
+      margin: 0.5rem 0 0.2rem;
+      text-align: center;
+      color: var(--accent);
+    }
+    .bio {
+      font-size: 0.9em;
+      margin: 0.2rem 0;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .social-links {
+      padding: 1.5rem 0;
+      text-align: center;
+    }
+    .social-links a {
+      color: var(--muted);
+      margin: 0 0.6rem;
+      font-size: 1.2em;
+      transition: color 0.2s;
+    }
+    .social-links a:hover {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    nav li {
+      margin: 0.5rem 0;
+    }
     nav a {
       color: var(--text);
       font-size: 1em;
       display: block;
-      padding: 0.5rem 0.8rem;
-      border-radius: 6px;
+      padding: 0.4rem 0.5rem;
+      border-radius: 4px;
       transition: background 0.2s, color 0.2s;
     }
-    nav a:hover, nav a.active { background: var(--card-border); color: var(--accent); text-decoration: none; }
-    .theme-toggle-container { margin-top: auto; padding-top: 1.5rem; text-align: center; }
+    nav a:hover, nav a.active {
+      background: var(--card-border);
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .theme-toggle-container {
+      margin-top: auto;
+      padding-top: 1.5rem;
+      text-align: center;
+    }
     .toggle {
       background: var(--card-border);
       color: var(--text);
       border: 1px solid var(--muted);
       padding: 0.5rem 1rem;
       border-radius: 20px;
-      font-size: 0.9em;
+      font-size: 0.85em;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
     }
-    .toggle:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
-    .menu-toggle {
-      display: none;
-      background: none;
-      border: 1px solid var(--muted);
-      color: var(--text);
-      padding: 0.5rem 0.8rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 1.2rem;
-      z-index: 1000;
+    .toggle:hover {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
     }
     
     /* Main Content */
     main {
       flex: 1;
-      padding: 2rem 3rem;
-      max-width: 960px;
+      padding: 2rem 2.5rem;
+      max-width: 900px;
       margin: 0 auto;
       min-width: 0;
     }
-    section { padding-top: 2rem; margin-top: -2rem; }
-    .top-right-section { display: flex; justify-content: flex-end; align-items: center; gap: 1rem; margin-bottom: 2rem; }
-    .search-bar { position: relative; flex-grow: 1; max-width: 320px; }
+    section {
+        padding-top: 2rem;
+        margin-top: -2rem;
+    }
+
+    .top-right-section {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .search-bar {
+      position: relative;
+      flex-grow: 1;
+      max-width: 320px;
+    }
     .search-bar input {
       width: 100%;
-      padding: 0.6rem 1rem;
+      padding: 0.5rem 1rem;
       padding-right: 2.5rem;
       border: 1px solid var(--card-border);
-      border-radius: 8px;
+      border-radius: 6px;
       background: var(--bg-lighter);
       color: var(--text);
       font-family: 'Fira Code', monospace;
@@ -142,34 +210,155 @@
       outline: none;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .search-bar input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--highlight-bg); }
-    .search-bar input::placeholder { color: var(--muted); }
-    .search-bar .search-icon { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); }
-    h1 { font-size: 2.2em; margin-bottom: 1rem; }
-    h2 { font-size: 1.6em; margin-top: 3rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--card-border); padding-bottom: 0.6rem; }
-    h2 > i { margin-right: 0.75rem; }
-    .card { background: var(--bg-lighter); border: 1px solid var(--card-border); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.25rem; }
+    .search-bar input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--highlight-bg);
+    }
+    .search-bar input::placeholder {
+      color: var(--muted);
+    }
+    .search-bar .search-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+    }
 
-    /* --- ADDED: Grid Layout Fixes --- */
+    /* Section & Card Styles */
+    h1 {
+      font-size: 2.2em;
+      margin-bottom: 1rem;
+    }
+    h2 {
+      font-size: 1.6em;
+      margin-top: 3rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.6rem;
+    }
+    h2 > i {
+        margin-right: 0.75rem;
+    }
+    h3 {
+      font-size: 1.2em;
+      color: var(--accent);
+      margin-top: 1.5rem;
+      margin-bottom: 0.8rem;
+    }
+    .card h3 {
+      color: var(--text);
+      font-size: 1.15em;
+      margin-top: 0;
+    }
+    .card {
+      background: var(--bg-lighter);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    /* Skills Tags */
+    .categories-tags-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1rem;
+      margin-bottom: 2rem;
+    }
+    .categories-tags-section span {
+      background: var(--bg-lighter);
+      border: 1px solid var(--card-border);
+      color: var(--accent);
+      padding: 0.4rem 0.9rem;
+      border-radius: 20px;
+      font-size: 0.9em;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .categories-tags-section span:hover {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    /* List & Table Styles */
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0;
+    }
+    ul li {
+      margin-bottom: 0.6rem;
+      position: relative;
+      padding-left: 1.5em;
+    }
+    ul li::before {
+      content: '»';
+      color: var(--accent);
+      position: absolute;
+      left: 0;
+      top: 1px;
+    }
+    ul.no-bullet li {
+        padding-left: 0;
+    }
+    ul.no-bullet li::before {
+      content: none;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+      font-size: 0.95em;
+    }
+    th, td {
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--card-border);
+      text-align: left;
+    }
+    th {
+      background-color: var(--bg-lighter);
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    /* Grids for Projects & Videos */
     .project-grid, .video-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 1.5rem;
     }
-    /* Ensure cards inside grids behave correctly */
-    .project-grid .card, .video-grid .card {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 0; /* Remove margin since gap is used */
+    .project-card {
+        display: flex;
+        flex-direction: column;
     }
-    .project-grid .card p {
-      flex-grow: 1; /* Allow description to fill space */
+    .project-card p {
+        flex-grow: 1;
     }
 
+    footer {
+      text-align: center;
+      font-size: 0.9em;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      color: var(--muted);
+      border-top: 1px solid var(--card-border);
+    }
+    footer a {
+        color: var(--muted);
+    }
 
-
-    /* --- RESPONSIVE ADJUSTMENTS --- */
-    
+    /* Responsive adjustments */
     @media (max-width: 1024px) {
       body {
         flex-direction: column;
@@ -181,156 +370,133 @@
         position: relative;
         border-right: none;
         border-bottom: 1px solid var(--card-border);
-        padding-bottom: 1.5rem;
       }
-
-      .sidebar-content {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-      
-      /* This is the new group for your avatar and name */
-      .sidebar-header {
-        display: flex;
-        align-items: center;
-      }
-      
-      .avatar { margin: 0 1rem 0 0; }
-      .avatar img { width: 60px; height: 60px; }
-      
-      aside header { text-align: left; }
-      .name { font-size: 1.2em; text-align: left; margin: 0; }
-      .bio { text-align: left; margin: 0; }
-      
-      .social-links, .theme-toggle-container { display: none; }
-
-      .menu-toggle { display: block; }
-      
-      nav {
-        display: none;
-        width: 100%;
-        margin-top: 1rem;
-        padding-top: 1rem;
-        border-top: 1px solid var(--card-border);
-      }
-      
-      aside.nav-open nav {
-        display: block;
-      }
-      
-      nav a {
-        padding: 0.8rem 0;
-        font-size: 1.1em;
-        text-align: center;
-      }
-      
       main {
           padding: 2rem 1.5rem;
       }
+      /* REMOVED .video-card rules as .video-container is better */
     }
     
+    /* ADDED: New breakpoint for small mobile devices */
     @media (max-width: 600px) {
-      html { font-size: 94%; }
-      main { padding: 1.5rem 1rem; }
+      main {
+        padding: 1.5rem 1rem;
+      }
       h1 { font-size: 1.8em; }
       h2 { font-size: 1.4em; }
-      .avatar img { width: 50px; height: 50px; }
-      .name { font-size: 1.1em; }
+      .project-grid, .video-grid {
+        grid-template-columns: 1fr;
+      }
     }
-</style>
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-<aside>
+  <aside>
     <div class="sidebar-content">
-      <div class="sidebar-header">
-        <div class="avatar">
-          <img src="https://avatars.githubusercontent.com/u/30938155?v=4" alt="Rohit Kumar Mishra">
-        </div>
-        <header>
-            <h1 class="name">Rohit Kumar Mishra</h1>
-            <p class="bio">AI Engineer</p>
-            <p class="bio">Gurgaon, Haryana, India</p>
-        </header>
+      <div class="avatar">
+        <img src="https://avatars.githubusercontent.com/u/30938155?v=4" alt="Rohit Kumar Mishra">
       </div>
-      <button id="menu-toggle" class="menu-toggle" aria-label="Open navigation menu">
-        <i class="fas fa-bars"></i>
-      </button>
-    </div>
+      <header>
+          <h1 class="name">Rohit Kumar Mishra</h1>
+          <p class="bio">AI Engineer</p>
+          <p class="bio">Gurgaon, Haryana, India</p>
+      </header>
+      <div class="social-links">
+        <a href="https://linkedin.com/in/rohitml/" target="_blank" rel="noopener noreferrer" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+        <a href="https://github.com/rohitm487" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
+        <a href="mailto:rohitm487@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+      </div>
 
-    <div class="social-links">
-      <a href="https://linkedin.com/in/rohitml/" target="_blank" rel="noopener noreferrer" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-      <a href="https://github.com/rohitm487" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
-      <a href="mailto:rohitm487@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+      <nav>
+        <ul>
+          <li><a href="#summary">Summary</a></li>
+          <li><a href="#experience">Experience</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#publications">Publications</a></li>
+          <li><a href="#education">Education</a></li>
+          <li><a href="#certifications">Certifications</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#videos">Videos</a></li>
+        </ul>
+      </nav>
     </div>
-
-    <nav>
-      <ul>
-        <li><a href="#summary">Summary</a></li>
-        <li><a href="#experience">Experience</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#publications">Publications</a></li>
-        <li><a href="#education">Education</a></li>
-        <li><a href="#certifications">Certifications</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#videos">Videos</a></li>
-      </ul>
-    </nav>
-    
     <div class="theme-toggle-container">
-        <button class="toggle" id="theme-toggle" aria-label="Toggle theme">Toggle Theme</button>
+        <button class="toggle" onclick="toggleTheme()">🌙 Toggle Theme</button>
     </div>
     </aside>
 
   <main>
     <div class="top-right-section">
       <div class="search-bar">
-        <input id="searchInput" type="search" placeholder="Search page...">
+        <input id="searchInput" type="text" placeholder="Search...">
         <i class="fas fa-search search-icon"></i>
       </div>
     </div>
 
+    <h1>👋 Hey, I'm Rohit !</h1>
+    <p>
+        I'm an experienced AI Engineer specializing in developing and deploying AI models that optimize performance.
+    </p>
+
     <section id="summary">
-      <h1>👋 Hey, I'm Rohit!</h1>
-      <p>An experienced AI Engineer specializing in developing and deploying performant AI models. I leverage advanced machine learning to create scalable, efficient solutions with deep expertise in LLMs, MLOps, and NLP.</p>
+      <h2><i class="fas fa-star" style="color: var(--accent);"></i> Professional Summary</h2>
+      <p>
+          Experienced AI Engineer skilled in developing and deploying AI models that optimize performance.
+          I utilize advanced machine learning techniques to create scalable and efficient solutions,
+          with a strong understanding of neural networks, natural language processing, and data mining.
+      </p>
     </section>
 
     <section id="experience">
-      <h2><i class="fas fa-briefcase"></i>Work Experience</h2>
+      <h2><i class="fas fa-briefcase" style="color: var(--accent);"></i> Work Experience</h2>
+
       <div class="card">
-        <h3>AI Engineer | DEHN India</h3>
-        <p><em>Gurgaon, India | Feb 2024 - Present</em></p>
+        <h3>AI Engineer | DEHN India - Gurgaon, India</h3>
+        <p><em>02/2025 to Current</em></p>
         <ul class="no-bullet">
-            <li>Developed an LLM-driven competitor insights engine by extracting specifications from web data, powering a Neo4j-based conversational recommendation system.</li>
-            <li>Built a competitive intelligence pipeline to automate monitoring of news and job posts with schema-based extraction, delivering insights via a React and Flask dashboard.</li>
-            <li>Engineered a multimodal RAG chatbot for over 500 pages of technical manuals, integrating diagrams using advanced context retrieval techniques.</li>
-            <li>Implemented human-in-the-loop context management to improve the retrieval accuracy and response quality of LLM workflows.</li>
+            <li>Developed an LLM-driven competitor insights engine by extracting specifications from web data, powering a Neo4J-based conversational recommendation system.</li>
+            <li>Built a competitive intelligence pipeline to automate monitoring of news, events, and job posts with schema-based extraction, delivering insights via a React + Flask dashboard.</li>
+            <li>Engineered a multimodal RAG chatbot for over 500 pages of technical manuals, integrating diagrams and illustrations using Qdrant and Colpali for enhanced context retrieval.</li>
+            <li>Implemented human-in-the-loop context management to improve the retrieval accuracy, long-term memory, and response quality of LLM workflows.</li>
         </ul>
       </div>
+
       <div class="card">
-        <h3>Data Scientist | CDAC Delhi</h3>
-        <p><em>New Delhi, India | Nov 2021 - Feb 2024</em></p>
+        <h3>Data Scientist | CDAC Delhi - New Delhi, India</h3>
+        <p><em>11/2021 to 02/2025</em></p>
+
         <h4>Project: AI Agent for Spinal Cord WSI Annotation & Segmentation</h4>
+        <p><em>Sep 2024 - Feb 2025</em></p>
         <ul class="no-bullet">
-            <li>Developed an AI agent using Llama 3.1 Vision and GraphRAG, which automated the annotation of Whole Slide Images (WSI), reducing manual effort by 70%.</li>
+            <li>Developed an AI agent using Llama 3.2 Vision 11B and GraphRAG, which automated the annotation of Whole Slide Images (WSI) and reduced manual effort by 70%.</li>
             <li>Integrated the Segment Anything Model (SAM) with LLM-driven iterative refinement, improving IoU to 0.71 for spinal cord region segmentation.</li>
+            <li>Improved diagnostic workflows by implementing spatial awareness tracking across neighboring image tiles.</li>
         </ul>
+
         <h4>Project: AI Content Detection & Personality Trait Evaluation</h4>
+        <p><em>Aug 2024 - Nov 2024</em></p>
         <ul class="no-bullet">
-            <li>Fine-tuned a BERT-based model that achieved 87% accuracy in detecting AI-generated content and evaluated personality traits from text using custom NLP pipelines.</li>
+            <li>Fine-tuned a BERT-based model that achieved 87% accuracy in detecting AI-generated content.</li>
+            <li>Built a trait explorer using WordLlama and a QA pipeline to generate OCEAN & DISC scores from domain-specific queries.</li>
+            <li>Deployed a containerized Agent API on Azure Web App, ensuring structured outputs with Pydantic and CrewAI integration.</li>
         </ul>
-         <h4>Project: Brain-Computer Interface for Neurodevelopmental Disorders</h4>
+
+        <h4>Project: Brain-Computer Interface for Neurodevelopmental Disorders</h4>
+        <p><em>Nov 2021 - Aug 2024</em></p>
         <ul class="no-bullet">
-            <li>Led the design of a Brain-Computer Interface (BCI) for children with ADHD and ASD, enhancing communication for over 100 patients.</li>
+            <li>Led the design of a Brain-Computer Interface (BCI) for children with ADHD, ASD, and CP, enhancing communication for over 100 patients.</li>
             <li>Developed CNN-LSTM hybrid models for EEG classification, achieving a 15% accuracy improvement over baseline models.</li>
+            <li>Enabled real-time EEG signal visualization, which reduced analysis time by 25% and improved clinical decision-making.</li>
         </ul>
       </div>
     </section>
 
     <section id="skills">
-      <h2><i class="fas fa-cogs"></i>Technical Skills</h2>
+      <h2><i class="fas fa-cogs" style="color: var(--accent);"></i> Technical Skills</h2>
       <div class="categories-tags-section">
-        <span>Python</span>
+        <h3>Categories</h3>
+        <span>Python Programming</span>
         <span>Fine-Tuning & Model Alignment</span>
         <span>Agentic AI</span>
         <span>LLM Guardrails</span>
@@ -338,12 +504,12 @@
         <span>Deep Learning</span>
         <span>Context Engineering</span>
         <span>RAG & Evals</span>
-        <span>MLOps & LLMOps</span>
+        <span>MLOps & LLMOps Deployment</span>
         <span>Natural Language Processing</span>
         <span>PyTorch</span>
-        <span>Hugging Face</span>
+        <span>Huggingface Transformers</span>
         <span>Scikit-Learn</span>
-        <span>LangChain</span>
+        <span>Langchain</span>
         <span>OpenCV</span>
         <span>FastAPI</span>
         <span>Flask</span>
@@ -351,120 +517,133 @@
         <span>Kubernetes</span>
         <span>GitHub Actions</span>
         <span>Azure</span>
-        <span>LLM Inference (vLLM, SGLang)</span>
-      </div>
-    </section>
-
-
-    <section id="publications">
-      <h2><i class="fas fa-book-open"></i>Publications</h2>
-      <div class="card">
-        <h3><a href="https://www.sciencedirect.com/science/article/abs/pii/B9780323953153000127" target="_blank" rel="noopener noreferrer">Xplainable AI for deep learning model on PCOD analysis</a></h3>
-        <p>Elsevier, 2024</p>
-      </div>
-      <div class="card">
-        <h3><a href="https://link.springer.com/chapter/10.1007/978-3-031-56700-1_34" target="_blank" rel="noopener noreferrer">Exploring the Usability of Quantum Machine Learning for EEG Signal Classification</a></h3>
-        <p>Springer Nature, 2023</p>
+        <span>LLM inference (vLLM & SGLang)</span>
       </div>
     </section>
 
     <section id="education">
-      <h2><i class="fas fa-graduation-cap"></i>Education</h2>
+      <h2><i class="fas fa-graduation-cap" style="color: var(--accent);"></i> Education</h2>
       <table>
         <thead>
           <tr>
             <th>Degree</th>
             <th>Field</th>
             <th>Institution</th>
-            <th>Years</th>
+            <th>Date</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>Bachelor of Technology</td>
-            <td>Electronics & Communications Engineering</td>
-            <td>Jawaharlal Nehru Technological University, Hyderabad</td>
-            <td>2013 - 2017</td>
+            <td>Electronics And Communications Engineering</td>
+            <td>Jawaharlal Nehru Technological University - Hyderabad</td>
+            <td>01/2013 to 07/2017</td>
           </tr>
         </tbody>
       </table>
     </section>
 
+    <section id="publications">
+      <h2><i class="fas fa-book" style="color: var(--accent);"></i> Publications</h2>
+      <div class="card">
+        <h3><a href="https://www.sciencedirect.com/science/article/abs/pii/B9780323953153000127" target="_blank">Xplainable AI for deep learning model on PCOD analysis</a></h3>
+        <p>Elsevier | 2024</p>
+      </div>
+      <div class="card">
+        <h3><a href="https://link.springer.com/chapter/10.1007/978-3-031-56700-1_34" target="_blank">Exploring the Usability of Quantum Machine Learning for EEG Signal Classification</a></h3>
+        <p>Springer Nature | 2023</p>
+      </div>
+    </section>
+
     <section id="certifications">
-      <h2><i class="fas fa-certificate"></i>Certifications</h2>
+      <h2><i class="fas fa-certificate" style="color: var(--accent);"></i> Certifications</h2>
       <ul>
-        <li>Microsoft Certified: Azure AI Engineer Associate (Issued: Jun 2024)</li>
-        <li>Microsoft Certified: Azure Data Scientist Associate (Issued: Mar 2024)</li>
+        <li>Microsoft Certified: Azure AI Engineer Associate (Issued: 06/2024)</li>
+        <li>Microsoft Certified: Azure Data Scientist Associate (Issued: 03/2024)</li>
       </ul>
     </section>
 
-    <section id="projects">
-      <h2><i class="fas fa-lightbulb"></i>Project Demos</h2>
+
+
+    <section id="project-demo">
+      <h2>Project Demos</h2>
       <div class="project-grid">
+
         <div class="card project-card">
           <h3>PPT to Video</h3>
           <div class="video-container">
-            <iframe loading="lazy" src="https://www.youtube.com/embed/hFuzCJ7M3tM" title="PPT to Video Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/hFuzCJ7M3tM" frameborder="0" allowfullscreen></iframe>
           </div>
-          <p>A tool that automates the conversion of PowerPoint presentations into engaging videos.</p>
+          <p>Demonstration of converting PowerPoint presentations to videos automatically.</p>
           <a href="https://github.com/rohitm487/ppt2vid" target="_blank" rel="noopener noreferrer">View on GitHub</a>
         </div>
+
         <div class="card project-card">
           <h3>Devanagari Lang</h3>
           <a href="https://rohitm487.github.io/devnagari-lang-web/" target="_blank" rel="noopener noreferrer">
-            <img loading="lazy" src="dev-lang.png" alt="Devanagari Lang Project screenshot" style="width: 100%; height: auto; border-radius: 6px; display: block; margin: 1rem 0;">
+            <img 
+              src="dev-lang.png" 
+              alt="Devanagari Lang Project" 
+              style="width: 100%; height: auto; border-radius: 8px; display: block; margin: 1rem 0;">
           </a>
-          <p>An interactive web project for learning and practicing the Devanagari script.</p>
           <a href="https://github.com/rohitm487/devnagari-lang-web" target="_blank" rel="noopener noreferrer">View on GitHub</a>
         </div>
+
         <div class="card project-card">
           <h3>Causal Inference Notes</h3>
-          <p>A public repository of Python notebooks and detailed notes on causal inference techniques and projects.</p>
+          <p>Collection of Python notebooks and notes for causal inference projects.</p>
           <a href="https://github.com/rohitm487/Causal_Inference_in_Python/" target="_blank" rel="noopener noreferrer">View on GitHub</a>
         </div>
-      </div>
-    </section>
 
-    <section id="videos">
-      <h2><i class="fas fa-video"></i>Videos</h2>
-      <div class="video-grid">
-        <div class="card">
-          <div class="video-container">
-            <iframe loading="lazy" src="https://www.youtube.com/embed/4lR37Vx4hWM" title="Introduction to AI Agents" frameborder="0" allowfullscreen></iframe>
-          </div>
-          <p>Introduction to AI Agents</p>
-        </div>
-        <div class="card">
-          <div class="video-container">
-            <iframe loading="lazy" src="https://www.youtube.com/embed/3qdYEOHQZ68" title="AI Agents Part 1" frameborder="0" allowfullscreen></iframe>
-          </div>
-          <p>AI Agents 2: ReAct Agent Implementation (Part 1)</p>
-        </div>
-        <div class="card">
-          <div class="video-container">
-            <iframe loading="lazy" src="https://www.youtube.com/embed/M4H4oLBolNw" title="AI Agents Part 2" frameborder="0" allowfullscreen></iframe>
-          </div>
-          <p>AI Agents 2.1: ReAct Agent Implementation (Part 2)</p>
-        </div>
       </div>
     </section>
 
 
+
+<section id="videos">
+  <h2>Videos</h2>
+  <div class="video-grid">
+    <div class="video-container">
+      <iframe src="https://www.youtube.com/embed/4lR37Vx4hWM" frameborder="0" allowfullscreen></iframe>
+      <p>Introduction to AI Agents</p>
+    </div>
+
+    <div class="video-container">
+      <iframe src="https://www.youtube.com/embed/3qdYEOHQZ68" frameborder="0" allowfullscreen></iframe>
+      <p>AI Agents 2 - Implementation of AI Agents from Scratch (ReAct Agent) - Part 1</p>
+    </div>
+
+    <div class="video-container">
+      <iframe src="https://www.youtube.com/embed/M4H4oLBolNw" frameborder="0" allowfullscreen></iframe>
+      <p>AI Agents 2.1 - Implementation of AI Agents from Scratch (ReAct Agent) - Part 2</p>
+    </div>
+  </div>
+</section>
+
+
+    <section id="articles">
+      <h2>Articles</h2>
+
+    </section>
     <footer>
-      <p>Built with <i class="fas fa-heart" style="color: #e03a3a;"></i> by <a href="https://github.com/rohitm487" target="_blank" rel="noopener noreferrer">Rohit Kumar Mishra</a>. Hosted on GitHub Pages.</p>
+      Built with <i class="fas fa-heart" style="color: #e03a3a;"></i> by <a href="https://github.com/rohitm487">Rohit Kumar Mishra</a> | Hosted on GitHub Pages
     </footer>
   </main>
 
 <script>
+    // Theme toggling functionality
+    function toggleTheme() {
+      document.body.classList.toggle('light');
+      if (document.body.classList.contains('light')) {
+        localStorage.setItem('theme', 'light');
+      } else {
+        localStorage.setItem('theme', 'dark');
+      }
+      updateToggleButtonText();
+    }
+
+    // Apply saved theme on load
     document.addEventListener('DOMContentLoaded', () => {
-    // Add this inside your main DOMContentLoaded event listener
-    const menuToggle = document.getElementById('menu-toggle');
-    const sidebar = document.querySelector('aside');
-
-    menuToggle.addEventListener('click', () => {
-      sidebar.classList.toggle('nav-open');
-    });
-
       // --- Theme Toggling ---
       const themeToggle = document.getElementById('theme-toggle');
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
@@ -475,119 +654,93 @@
           document.body.classList.remove('light');
           themeToggle.innerHTML = '☀️ Light Mode';
         } else {
-          document.body.classList.add('light');
-          themeToggle.innerHTML = '🌙 Dark Mode';
+            toggleButton.innerHTML = '🌙 Dark Theme';
         }
-      }
+    }
 
-      // Set initial theme based on localStorage or system preference
-      if (currentTheme) {
-        applyTheme(currentTheme);
-      } else {
-        applyTheme(prefersDark.matches ? 'dark' : 'light');
-      }
-
-      themeToggle.addEventListener('click', () => {
-        currentTheme = document.body.classList.contains('light') ? 'dark' : 'light';
-        localStorage.setItem('theme', currentTheme);
-        applyTheme(currentTheme);
-      });
-
-      // --- Active Nav Link on Scroll ---
-      const sections = document.querySelectorAll('main section');
-      const navLinks = document.querySelectorAll('nav a');
-      
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            navLinks.forEach(link => {
-              link.classList.toggle('active', link.getAttribute('href').substring(1) === entry.target.id);
-            });
-          }
-        });
-      }, { rootMargin: '-50% 0px -50% 0px' });
-
-      sections.forEach(section => observer.observe(section));
-
-      // --- Search Functionality with MiniSearch ---
+    // Search functionality
+    function initFuseSearch() {
       const searchInput = document.getElementById('searchInput');
-      const allContent = Array.from(document.querySelectorAll('main > section'));
-
-      // Use a more descriptive ID for MiniSearch
-      const searchableItems = Array.from(document.querySelectorAll('.card, main section > h2, main section > p, main section > table, main section > ul'))
-        .map((el, id) => ({
-          id: id,
-          title: el.querySelector('h3, h4')?.innerText || el.closest('section')?.querySelector('h2')?.innerText || '',
-          text: el.innerText,
-          element: el
-        }));
       
-      const miniSearch = new MiniSearch({
-        fields: ['title', 'text'], // fields to index for search
-        storeFields: ['title', 'text'], // fields to return with search results
-        searchOptions: {
-          prefix: true,
-          fuzzy: 0.2
+      // --- THIS IS THE FINAL FIX ---
+      // Create the most granular index possible by selecting every individual content block.
+      const elementsToIndex = document.querySelectorAll(
+        'main > h1, main > p, section > h2, .card, table, #certifications ul, .video-container'
+      );
+      
+      const data = Array.from(elementsToIndex).map(el => ({
+        element: el,
+        text: el.innerText.replace(/\s+/g, ' ').trim()
+      }));
+
+      const fuse = new Fuse(data, { keys: ['text'], threshold: 0.3 });
+
+      function highlightText(element, query) {
+        const regex = new RegExp(query, "gi");
+        const walk = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+        let node;
+        const nodesToProcess = [];
+
+        while ((node = walk.nextNode())) {
+            if (node.parentNode.closest('.categories-tags-section span')) {
+                continue;
+            }
+            if (node.nodeValue.match(regex)) {
+                nodesToProcess.push(node);
+            }
         }
-      });
 
-      miniSearch.addAll(searchableItems);
-      
-      let searchResults = [];
+        nodesToProcess.forEach(textNode => {
+          const wrapper = document.createElement("span");
+          wrapper.className = 'search-highlight-wrapper'; 
+          wrapper.innerHTML = textNode.nodeValue.replace(regex, match => `<mark>${match}</mark>`);
+          textNode.parentNode.replaceChild(wrapper, textNode);
+        });
+      }
 
-      searchInput.addEventListener('input', () => {
-        const query = searchInput.value.trim();
+      function resetHighlighting() {
+          elementsToIndex.forEach(el => {
+              el.querySelectorAll('span.search-highlight-wrapper').forEach(wrapper => {
+                  wrapper.replaceWith(wrapper.textContent);
+              });
+          });
+      }
 
-        allContent.forEach(section => section.style.display = 'none');
-        searchableItems.forEach(item => item.element.style.display = 'none');
+      searchInput.addEventListener('input', function() {
+        resetHighlighting();
+        const query = this.value.trim();
         
-        // Clear previous highlights
-        document.querySelectorAll('mark').forEach(mark => mark.replaceWith(mark.textContent));
-
-        if (!query) {
-            allContent.forEach(section => section.style.display = '');
-            searchableItems.forEach(item => item.element.style.display = '');
+        // When search is cleared, show everything and their parent sections
+        if (query === '') {
+            elementsToIndex.forEach(el => {
+                el.style.display = '';
+                // Also ensure the parent <section> is visible
+                if (el.closest('section')) {
+                    el.closest('section').style.display = '';
+                }
+            });
             return;
         }
 
-        searchResults = miniSearch.search(query);
-        const matchedElements = searchResults.map(result => searchableItems[result.id].element);
+        const results = fuse.search(query);
+        const matchedElements = results.map(result => result.item.element);
 
+        // Hide ALL indexed elements first
+        elementsToIndex.forEach(el => el.style.display = 'none');
+        
+        // Then, show ONLY the matched elements and their parent sections
         matchedElements.forEach(el => {
             el.style.display = '';
-            el.closest('section').style.display = '';
-        });
-        
-        // Highlight matches
-        const terms = searchResults.flatMap(result => Object.values(result.terms)).flat();
-        const uniqueTerms = [...new Set(terms)];
-        if (uniqueTerms.length === 0) return;
-
-        const regex = new RegExp(uniqueTerms.join('|'), 'gi');
-        
-        matchedElements.forEach(el => {
-            const walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
-            let node;
-            while(node = walk.nextNode()) {
-                if (node.parentElement.tagName === 'MARK') continue;
-                const matches = node.nodeValue.match(regex);
-                if (matches) {
-                    const fragment = document.createDocumentFragment();
-                    let lastIndex = 0;
-                    node.nodeValue.replace(regex, (match, offset) => {
-                        fragment.appendChild(document.createTextNode(node.nodeValue.substring(lastIndex, offset)));
-                        const mark = document.createElement('mark');
-                        mark.textContent = match;
-                        fragment.appendChild(mark);
-                        lastIndex = offset + match.length;
-                    });
-                    fragment.appendChild(document.createTextNode(node.nodeValue.substring(lastIndex)));
-                    node.parentNode.replaceChild(fragment, node);
-                }
+            // Also ensure the parent <section> is visible
+            if (el.closest('section')) {
+                el.closest('section').style.display = '';
             }
+            highlightText(el, query);
         });
       });
-    });
-</script>
+    }
+  </script>
+
+
 </body>
 </html>
