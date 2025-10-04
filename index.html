@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rohit Kumar Mishra | AI Engineer</title>
+  <meta name="description" content="Portfolio of Rohit Kumar Mishra, an AI Engineer specializing in LLMs, MLOps, and scalable AI solutions.">
+  <link rel="icon" href="favicon.png">
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.min.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap">
+  <style>
+    /* Color Variables for Dark and Light Theme */
+    :root {
+      --bg: #0d1117; /* Dark background */
+      --bg-lighter: #161b22; /* Sidebar background */
+      --text: #c9d1d9; /* Light text */
+      --accent: #58a6ff; /* Blue accent */
+      --muted: #8b949e; /* Muted gray for borders/secondary text */
+      --link-color: #58a6ff;
+      --card-border: #30363d; /* Card border in dark mode */
+    }
+
+    body.light {
+      --bg: #ffffff; /* Light background */
+      --bg-lighter: #f6f8fa; /* Sidebar background */
+      --text: #24292e; /* Dark text */
+      --accent: #0366d6; /* Blue accent */
+      --muted: #586069; /* Muted gray */
+      --link-color: #0366d6;
+      --card-border: #e1e4e8; /* Card border in light mode */
+    }
+
+    /* Base Styles */
+    body {
+      margin: 0;
+      font-family: 'Fira Code', monospace;
+      background: var(--bg);
+      color: var(--text);
+      display: flex; /* For the two-column layout */
+      min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--link-color);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Sidebar */
+    aside {
+      width: 280px; /* Fixed width for sidebar */
+      background: var(--bg-lighter);
+      padding: 2rem 1.5rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-shrink: 0; /* Prevent shrinking */
+      border-right: 1px solid var(--card-border); /* Separator */
+    }
+
+    .avatar {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .avatar img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid var(--accent);
+      object-fit: cover;
+    }
+
+    .name {
+      font-size: 1.5em; /* Larger name */
+      font-weight: 600;
+      margin: 0.5rem 0 0.2rem;
+      text-align: center;
+      color: var(--accent);
+    }
+    .bio {
+      font-size: 0.9em;
+      margin: 0 0 1.5rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .social-links {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .social-links a {
+      color: var(--muted);
+      margin: 0 0.5rem;
+      font-size: 1.1em;
+    }
+    .social-links a:hover {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    nav li {
+      margin: 0.7rem 0;
+    }
+    nav a {
+      color: var(--text);
+      font-size: 1em;
+      display: block;
+      padding: 0.4rem 0.5rem;
+      border-radius: 4px;
+      transition: background 0.2s, color 0.2s;
+    }
+    nav a:hover {
+      background: var(--card-border);
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .theme-toggle-container {
+      margin-top: auto;
+      margin-bottom: 4rem; /* adds space from bottom */
+      text-align: center;
+    }
+    .toggle {
+      background: var(--card-border);
+      color: var(--text);
+      border: 1px solid var(--muted);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85em;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .toggle:hover {
+      background: var(--accent);
+      color: var(--bg-lighter);
+      border-color: var(--accent);
+    }
+
+    /* Main Content Area */
+    main {
+      flex: 1; /* Takes remaining space */
+      padding: 2rem 2.5rem;
+      max-width: 900px; /* Max width for content */
+      margin: 0 auto; /* Center content */
+    }
+
+    .top-right-section {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .search-bar {
+      position: relative;
+      flex-grow: 1;
+      max-width: 300px; /* Limit search bar width */
+    }
+    .search-bar input {
+      width: 100%;
+      padding: 0.5rem 1rem;
+      padding-right: 2.5rem; /* Space for icon */
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      background: var(--bg-lighter);
+      color: var(--text);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9em;
+      outline: none;
+    }
+    .search-bar input::placeholder {
+      color: var(--muted);
+    }
+    .search-bar .search-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      pointer-events: none; /* Don't interfere with input */
+    }
+
+    .categories-tags-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      margin-bottom: 2rem;
+      justify-content: flex-start;
+    }
+    .categories-tags-section h3 {
+      width: 100%; /* Take full width */
+      margin-bottom: 0.5rem;
+      color: var(--text);
+      font-size: 1.1em;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 5px;
+    }
+    .categories-tags-section span {
+      background: var(--bg-lighter);
+      border: 1px solid var(--card-border);
+      color: var(--accent);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85em;
+      cursor: pointer;
+      white-space: nowrap; /* Prevent tag breaking */
+    }
+    .categories-tags-section span:hover {
+      background: var(--accent);
+      color: var(--bg-lighter);
+      border-color: var(--accent);
+    }
+
+
+    /* Content Sections */
+    section {
+      margin-bottom: 3rem;
+    }
+    h1 {
+      font-size: 2em;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+    }
+    h2 {
+      font-size: 1.4em;
+      font-weight: 600;
+      margin-top: 2.5rem;
+      margin-bottom: 1.2rem;
+      color: var(--text);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.5rem;
+    }
+    h3 {
+      font-size: 1.2em;
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: 1.5rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .card {
+      background: var(--bg-lighter);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+      transition: border-color 0.2s;
+    }
+    .card:hover {
+        border-color: var(--accent);
+    }
+    .card h3 {
+      margin-top: 0;
+      color: var(--text); /* Card titles are text color */
+      font-size: 1.1em;
+    }
+    .card p {
+      font-size: 0.95em;
+      color: var(--muted);
+      margin: 0.5rem 0 0;
+    }
+    .card a {
+        color: var(--text);
+    }
+    .card a:hover {
+        color: var(--accent);
+    }
+
+    ul {
+      list-style: none; /* Remove default bullet */
+      padding: 0;
+      margin: 1rem 0;
+    }
+    ul li {
+      margin-bottom: 0.5rem;
+      position: relative;
+      padding-left: 1.2em; /* Space for custom bullet */
+    }
+    ul li::before {
+      content: '»'; /* Custom bullet */
+      color: var(--accent);
+      position: absolute;
+      left: 0;
+    }
+    ul.no-bullet li::before {
+        content: none;
+        padding-left: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+      font-size: 0.9em;
+    }
+    th, td {
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--card-border);
+      text-align: left;
+    }
+    th {
+      background-color: var(--bg);
+      font-weight: 600;
+      color: var(--accent);
+    }
+    td {
+      color: var(--text);
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.8em;
+      margin-top: 4rem;
+      color: var(--muted);
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--card-border);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 960px) {
+      body {
+        flex-direction: column;
+      }
+      aside {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--card-border);
+      }
+      .top-right-section {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .search-bar {
+        width: 100%;
+        max-width: none;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <aside>
+    <div>
+      <div class="avatar">
+        <img src="https://avatars.githubusercontent.com/u/30938155?v=4" alt="Rohit Kumar Mishra">
+      </div>
+      <h1 class="name">Rohit Kumar Mishra</h1>
+      <p class="bio">AI Engineer</p>
+      <p class="bio">Gurgaon, Haryana</p>
+      <div class="social-links">
+        <a href="https://linkedin.com/in/rohitml/" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+        <a href="https://github.com/rohitm487" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+        <a href="mailto:rohitm487@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+        <a href="tel:+917995853520" title="Phone"><i class="fas fa-phone"></i></a>
+      </div>
+
+      <nav>
+        <ul>
+          <li><a href="#summary">Professional Summary</a></li>
+          <li><a href="#experience">Experience</a></li>
+          <li><a href="#skills">Technical Skills</a></li>
+          <li><a href="#education">Education</a></li>
+          <li><a href="#publications">Publications</a></li>
+          <li><a href="#certifications">Certifications</a></li>
+          <li><a href="#videos">Videos</a></li>
+          <li><a href="#articles">Articles</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="theme-toggle-container">
+        <button class="toggle" onclick="toggleTheme()">🌙 Toggle Theme</button>
+    </div>
+  </aside>
+
+  <main>
+    <div class="top-right-section">
+      <div class="search-bar">
+        <input id="searchInput" type="text" placeholder="Search...">
+        <i class="fas fa-search search-icon"></i>
+      </div>
+    </div>
+
+    <h1>👋 Hey, I'm Rohit !</h1>
+    <p>
+        I'm an experienced AI Engineer specializing in developing and deploying AI models that optimize performance. You can check out my resume.
+        [<a href="Rohit_Kumar_Mishra_Resume.pdf" target="_blank" style="color: var(--accent);">Download PDF</a>]
+    </p>
+
+    <section id="summary">
+      <h2><i class="fas fa-star" style="color: var(--accent);"></i> Professional Summary</h2>
+      <p>
+          Experienced AI Engineer skilled in developing and deploying AI models that optimize performance.
+          I utilize advanced machine learning techniques to create scalable and efficient solutions,
+          with a strong understanding of neural networks, natural language processing, and data mining.
+      </p>
+    </section>
+
+    <section id="experience">
+      <h2><i class="fas fa-briefcase" style="color: var(--accent);"></i> Work Experience</h2>
+
+      <div class="card">
+        <h3>AI Engineer | DEHN India - Gurgaon, India</h3>
+        <p><em>02/2025 to Current</em></p>
+        <ul class="no-bullet">
+            <li>Developed an LLM-driven competitor insights engine by extracting specifications from web data, powering a Neo4J-based conversational recommendation system.</li>
+            <li>Built a competitive intelligence pipeline to automate monitoring of news, events, and job posts with schema-based extraction, delivering insights via a React + Flask dashboard.</li>
+            <li>Engineered a multimodal RAG chatbot for over 500 pages of technical manuals, integrating diagrams and illustrations using Qdrant and Colpali for enhanced context retrieval.</li>
+            <li>Implemented human-in-the-loop context management to improve the retrieval accuracy, long-term memory, and response quality of LLM workflows.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Data Scientist | CDAC Delhi - New Delhi, India</h3>
+        <p><em>11/2021 to 02/2025</em></p>
+
+        <h4>Project: AI Agent for Spinal Cord WSI Annotation & Segmentation</h4>
+        <p><em>Sep 2024 - Feb 2025</em></p>
+        <ul class="no-bullet">
+            <li>Developed an AI agent using Llama 3.2 Vision 11B and GraphRAG, which automated the annotation of Whole Slide Images (WSI) and reduced manual effort by 70%.</li>
+            <li>Integrated the Segment Anything Model (SAM) with LLM-driven iterative refinement, improving IoU to 0.71 for spinal cord region segmentation.</li>
+            <li>Improved diagnostic workflows by implementing spatial awareness tracking across neighboring image tiles.</li>
+        </ul>
+
+        <h4>Project: AI Content Detection & Personality Trait Evaluation</h4>
+        <p><em>Aug 2024 - Nov 2024</em></p>
+        <ul class="no-bullet">
+            <li>Fine-tuned a BERT-based model that achieved 87% accuracy in detecting AI-generated content.</li>
+            <li>Built a trait explorer using WordLlama and a QA pipeline to generate OCEAN & DISC scores from domain-specific queries.</li>
+            <li>Deployed a containerized Agent API on Azure Web App, ensuring structured outputs with Pydantic and CrewAI integration.</li>
+        </ul>
+
+        <h4>Project: Brain-Computer Interface for Neurodevelopmental Disorders</h4>
+        <p><em>Nov 2021 - Aug 2024</em></p>
+        <ul class="no-bullet">
+            <li>Led the design of a Brain-Computer Interface (BCI) for children with ADHD, ASD, and CP, enhancing communication for over 100 patients.</li>
+            <li>Developed CNN-LSTM hybrid models for EEG classification, achieving a 15% accuracy improvement over baseline models.</li>
+            <li>Enabled real-time EEG signal visualization, which reduced analysis time by 25% and improved clinical decision-making.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="skills">
+      <h2><i class="fas fa-cogs" style="color: var(--accent);"></i> Technical Skills</h2>
+      <div class="categories-tags-section">
+        <h3>Categories</h3>
+        <span>Python Programming</span>
+        <span>Fine-Tuning & Model Alignment</span>
+        <span>Agentic AI</span>
+        <span>LLM Guardrails</span>
+        <span>Machine Learning</span>
+        <span>Deep Learning</span>
+        <span>Context Engineering</span>
+        <span>RAG & Evals</span>
+        <span>MLOps & LLMOps Deployment</span>
+        <span>Natural Language Processing</span>
+        <span>PyTorch</span>
+        <span>Huggingface Transformers</span>
+        <span>Scikit-Learn</span>
+        <span>Langchain</span>
+        <span>OpenCV</span>
+        <span>FastAPI</span>
+        <span>Flask</span>
+        <span>Docker</span>
+        <span>Kubernetes</span>
+        <span>GitHub Actions</span>
+        <span>Azure</span>
+      </div>
+    </section>
+
+    <section id="education">
+      <h2><i class="fas fa-graduation-cap" style="color: var(--accent);"></i> Education</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Degree</th>
+            <th>Field</th>
+            <th>Institution</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Bachelor of Technology</td>
+            <td>Electronics And Communications Engineering</td>
+            <td>Jawaharlal Nehru Technological University - Hyderabad</td>
+            <td>01/2013 to 07/2017</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="publications">
+      <h2><i class="fas fa-book" style="color: var(--accent);"></i> Publications</h2>
+      <div class="card">
+        <h3><a href="#" target="_blank">Xplainable AI for deep learning model on PCOD analysis</a></h3>
+        <p>Elsevier | 2024</p>
+      </div>
+      <div class="card">
+        <h3><a href="#" target="_blank">Exploring the Usability of Quantum Machine Learning for EEG Signal Classification</a></h3>
+        <p>Springer Nature | 2023</p>
+      </div>
+    </section>
+
+    <section id="certifications">
+      <h2><i class="fas fa-certificate" style="color: var(--accent);"></i> Certifications</h2>
+      <ul>
+        <li>Microsoft Certified: Azure AI Engineer Associate (Issued: 06/2024)</li>
+        <li>Microsoft Certified: Azure Data Scientist Associate (Issued: 03/2024)</li>
+      </ul>
+    </section>
+
+    <footer>
+      Built with <i class="fas fa-heart" style="color: #e03a3a;"></i> by <a href="https://github.com/rohitm487">Rohit Kumar Mishra</a> | Hosted on GitHub Pages
+    </footer>
+  </main>
+
+  <script>
+    // Theme toggling functionality
+    function toggleTheme() {
+      document.body.classList.toggle('light');
+      // Optionally save theme preference to localStorage
+      if (document.body.classList.contains('light')) {
+        localStorage.setItem('theme', 'light');
+      } else {
+        localStorage.setItem('theme', 'dark');
+      }
+      updateToggleButtonText();
+    }
+
+    // Apply saved theme on load
+    document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light');
+      }
+      updateToggleButtonText();
+    });
+
+    // Update button text based on current theme
+    function updateToggleButtonText() {
+        const toggleButton = document.querySelector('.toggle');
+        if (document.body.classList.contains('light')) {
+            toggleButton.innerHTML = '☀️ Light Theme';
+        } else {
+            toggleButton.innerHTML = '🌙 Dark Theme';
+        }
+    }
+    //search
+
+      document.addEventListener('DOMContentLoaded', () => {
+    initFuseSearch();
+  });
+
+  function initFuseSearch() {
+    const searchInput = document.getElementById('searchInput');
+    const sections = document.querySelectorAll('main section, main .card, main table');
+
+    // Build data array for Fuse.js
+    const data = Array.from(sections).map((el, index) => {
+      return {
+        id: index,
+        element: el,
+        text: el.innerText.replace(/\s+/g, ' ').trim()
+      };
+    });
+
+    // Fuse.js options
+    const options = {
+      keys: ['text'],
+      threshold: 0.3, // Fuzziness level (0.0 = exact, 1.0 = very fuzzy)
+      includeMatches: true
+    };
+
+    const fuse = new Fuse(data, options);
+
+    searchInput.addEventListener('input', function() {
+      const query = this.value.trim();
+
+      // Reset all sections first
+      data.forEach(item => {
+        item.element.style.display = '';
+        item.element.innerHTML = item.element.innerHTML.replace(/<mark>(.*?)<\/mark>/gi, '$1');
+      });
+
+      if (query === '') return;
+
+      const results = fuse.search(query);
+
+      // Hide all first
+      data.forEach(item => item.element.style.display = 'none');
+
+      // Show matching results with highlights
+      results.forEach(result => {
+        const el = result.item.element;
+        el.style.display = '';
+
+        // Highlight matches
+        result.matches.forEach(match => {
+          match.indices.forEach(([start, end]) => {
+            const originalText = el.innerText;
+            const highlighted = originalText.substring(0, start) +
+                                '<mark>' + originalText.substring(start, end + 1) + '</mark>' +
+                                originalText.substring(end + 1);
+            el.innerHTML = highlighted;
+          });
+        });
+      });
+    });
+  }
+  </script>
+</body>
+</html>
