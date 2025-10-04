@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rohit Kumar Mishra | AI Engineer</title>
   <meta name="description" content="Portfolio of Rohit Kumar Mishra, an AI Engineer specializing in LLMs, MLOps, and scalable AI solutions.">
   <link rel="icon" href="favicon.png">
@@ -190,6 +190,11 @@
       transform: translateY(-50%);
       color: var(--muted);
     }
+    
+    /* CSS Class for search functionality */
+    .hidden-by-search {
+        display: none !important;
+    }
 
     /* Section & Card Styles */
     h1 {
@@ -297,6 +302,12 @@
       font-weight: 600;
       color: var(--accent);
     }
+    
+    /* FIX: Added container to make table scrollable */
+    .table-container {
+      overflow-x: auto; /* Allows horizontal scrolling only when needed */
+      -webkit-overflow-scrolling: touch; /* Adds smooth scrolling on iOS devices */
+    }
 
     /* Grids for Projects & Videos */
     .project-grid, .video-grid {
@@ -352,7 +363,6 @@
           padding-right: 5rem;
       }
 
-      /* Target the new wrapper and the theme toggle for collapsing */
       .sidebar-collapsible,
       .theme-toggle-container {
         max-height: 0;
@@ -360,7 +370,6 @@
         transition: max-height 0.4s ease-in-out;
       }
       
-      /* The 'is-open' class will expand the menu */
       aside.is-open .sidebar-collapsible,
       aside.is-open .theme-toggle-container {
         max-height: 100vh;
@@ -376,6 +385,7 @@
       }
       
       main {
+        width: 100%; /* Ensure main content takes full width */
         padding: 2rem 1.5rem;
       }
     }
@@ -558,24 +568,27 @@
 
     <section id="education">
       <h2><i class="fas fa-graduation-cap" style="color: var(--accent);"></i> Education</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Degree</th>
-            <th>Field</th>
-            <th>Institution</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Bachelor of Technology</td>
-            <td>Electronics And Communications Engineering</td>
-            <td>Jawaharlal Nehru Technological University - Hyderabad</td>
-            <td>01/2013 to 07/2017</td>
-          </tr>
-        </tbody>
-      </table>
+      <!-- FIX: Added a div wrapper to make the table scrollable on small screens -->
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Degree</th>
+              <th>Field</th>
+              <th>Institution</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Bachelor of Technology</td>
+              <td>Electronics And Communications Engineering</td>
+              <td>Jawaharlal Nehru Technological University - Hyderabad</td>
+              <td>01/2013 to 07/2017</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <section id="publications">
@@ -665,7 +678,7 @@
     </footer>
   </main>
 <script>
-
+document.addEventListener('DOMContentLoaded', () => {
   // --- Mobile Menu Toggling ---
   const menuToggle = document.getElementById('menu-toggle');
   const sidebar = document.getElementById('sidebar');
@@ -686,10 +699,6 @@
     }
   });
 
-
-
-
-document.addEventListener('DOMContentLoaded', () => {
   // --- Theme Toggling ---
   const themeToggle = document.getElementById('theme-toggle');
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
@@ -715,13 +724,11 @@ document.addEventListener('DOMContentLoaded', () => {
     applyTheme(newTheme);
   });
 
-// --- Search functionality ---
+  // --- Search functionality ---
   function initFuseSearch() {
     const searchInput = document.getElementById('searchInput');
-    // Define the top-level content blocks that we will hide/show
     const contentBlocks = document.querySelectorAll('main > section, main > h1, main > p');
     
-    // Define all the detailed elements we want to make searchable
     const elementsToIndex = document.querySelectorAll(
       'main > h1, main > p, section > h2, .card, table, #certifications ul, .video-container, #skills'
     );
@@ -768,7 +775,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // If the search bar is empty, show all content blocks and exit
       if (query === '') {
-        contentBlocks.forEach(block => block.style.display = '');
+        // FIX: Use classList to remove the hidden class
+        contentBlocks.forEach(block => block.classList.remove('hidden-by-search'));
         return;
       }
 
@@ -786,18 +794,17 @@ document.addEventListener('DOMContentLoaded', () => {
         highlightText(el, query);
       });
 
-      // First, hide all content blocks
-      contentBlocks.forEach(block => block.style.display = 'none');
+      // FIX: Use classList to add the hidden class
+      contentBlocks.forEach(block => block.classList.add('hidden-by-search'));
       
-      // Then, show only the blocks that contained a match
-      blocksToShow.forEach(block => block.style.display = '');
+      // FIX: Use classList to remove the hidden class from matching blocks
+      blocksToShow.forEach(block => block.classList.remove('hidden-by-search'));
     });
   }
 
   // Initialize search
   initFuseSearch();
 });
-
 </script>
 </body>
 </html>
