@@ -18,6 +18,7 @@
       --muted: #8b949e; /* Muted gray for borders/secondary text */
       --link-color: #58a6ff;
       --card-border: #30363d; /* Card border in dark mode */
+      --highlight-bg: rgba(88, 166, 255, 0.4);
     }
 
     body.light {
@@ -68,8 +69,7 @@
 
     /* Sidebar */
     aside {
-      /* MODIFIED: Changed fixed width to a flexible, clamped width */
-      width: clamp(250px, 22vw, 300px);
+      width: clamp(260px, 22vw, 300px);
       background: var(--bg-lighter);
       padding: 2rem 1.5rem;
       position: sticky;
@@ -77,20 +77,18 @@
       height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
       flex-shrink: 0;
       border-right: 1px solid var(--card-border);
       overflow-y: auto;
     }
-
-    .sidebar-content {
-        flex-grow: 1;
+    .sidebar-header {
+      display: flex;
+      flex-direction: column; /* stack children vertically */
+      align-items: center;    /* center them horizontally */
     }
 
-    .avatar {
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
+    .sidebar-content { flex-grow: 1; }
+    .avatar { text-align: center; margin-bottom: 1.5rem; }
     .avatar img {
       width: 120px;
       height: 120px;
@@ -98,78 +96,46 @@
       border: 3px solid var(--accent);
       object-fit: cover;
     }
-
-    .name {
-      font-size: 1.5em;
-      font-weight: 600;
-      margin: 0.5rem 0 0.2rem;
-      text-align: center;
-      color: var(--accent);
-    }
-    .bio {
-      font-size: 0.9em;
-      margin: 0.2rem 0;
-      color: var(--muted);
-      text-align: center;
-    }
-
-    .social-links {
-      padding: 1.5rem 0;
-      text-align: center;
-    }
-    .social-links a {
-      color: var(--muted);
-      margin: 0 0.6rem;
-      font-size: 1.2em;
-      transition: color 0.2s;
-    }
-    .social-links a:hover {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    nav ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    nav li {
-      margin: 0.5rem 0;
-    }
+    .name { font-size: 1.5em; font-weight: 600; margin: 0.5rem 0 0.2rem; text-align: center; color: var(--accent); }
+    .bio { font-size: 0.9em; margin: 0.2rem 0; color: var(--muted); text-align: center; }
+    .social-links { padding: 1.5rem 0; text-align: center; }
+    .social-links a { color: var(--muted); margin: 0 0.6rem; font-size: 1.2em; transition: color 0.2s; }
+    .social-links a:hover { color: var(--accent); text-decoration: none; }
+    nav ul { list-style: none; padding: 0; margin: 0; }
+    nav li { margin: 0.5rem 0; }
     nav a {
       color: var(--text);
       font-size: 1em;
       display: block;
-      padding: 0.4rem 0.5rem;
-      border-radius: 4px;
+      padding: 0.5rem 0.8rem;
+      border-radius: 6px;
       transition: background 0.2s, color 0.2s;
     }
-    nav a:hover, nav a.active {
-      background: var(--card-border);
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    .theme-toggle-container {
-      margin-top: auto;
-      padding-top: 1.5rem;
-      text-align: center;
-    }
+    nav a:hover, nav a.active { background: var(--card-border); color: var(--accent); text-decoration: none; }
+    .theme-toggle-container { margin-top: auto; padding-top: 1.5rem; text-align: center; }
     .toggle {
       background: var(--card-border);
       color: var(--text);
       border: 1px solid var(--muted);
       padding: 0.5rem 1rem;
       border-radius: 20px;
-      font-size: 0.85em;
+      font-size: 0.9em;
       cursor: pointer;
-      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      transition: all 0.2s;
     }
-    .toggle:hover {
-      background: var(--accent);
-      color: var(--bg);
-      border-color: var(--accent);
+    .toggle:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: 1px solid var(--muted);
+      color: var(--text);
+      padding: 0.5rem 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      z-index: 1000;
     }
+    
     
     /* Main Content */
     main {
@@ -392,37 +358,44 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <aside>
+<aside>
     <div class="sidebar-content">
-      <div class="avatar">
-        <img src="https://avatars.githubusercontent.com/u/30938155?v=4" alt="Rohit Kumar Mishra">
+      <div class="sidebar-header">
+        <div class="avatar">
+          <img src="https://avatars.githubusercontent.com/u/30938155?v=4" alt="Rohit Kumar Mishra">
+        </div>
+        <header>
+            <h1 class="name">Rohit Kumar Mishra</h1>
+            <p class="bio">AI Engineer</p>
+            <p class="bio">Gurgaon, Haryana, India</p>
+        </header>
       </div>
-      <header>
-          <h1 class="name">Rohit Kumar Mishra</h1>
-          <p class="bio">AI Engineer</p>
-          <p class="bio">Gurgaon, Haryana, India</p>
-      </header>
-      <div class="social-links">
-        <a href="https://linkedin.com/in/rohitml/" target="_blank" rel="noopener noreferrer" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-        <a href="https://github.com/rohitm487" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
-        <a href="mailto:rohitm487@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
-      </div>
-
-      <nav>
-        <ul>
-          <li><a href="#summary">Summary</a></li>
-          <li><a href="#experience">Experience</a></li>
-          <li><a href="#skills">Skills</a></li>
-          <li><a href="#publications">Publications</a></li>
-          <li><a href="#education">Education</a></li>
-          <li><a href="#certifications">Certifications</a></li>
-          <li><a href="#projects">Projects</a></li>
-          <li><a href="#videos">Videos</a></li>
-        </ul>
-      </nav>
+      <button id="menu-toggle" class="menu-toggle" aria-label="Open navigation menu">
+        <i class="fas fa-bars"></i>
+      </button>
     </div>
+
+    <div class="social-links">
+      <a href="https://linkedin.com/in/rohitml/" target="_blank" rel="noopener noreferrer" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+      <a href="https://github.com/rohitm487" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
+      <a href="mailto:rohitm487@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+    </div>
+
+    <nav>
+      <ul>
+        <li><a href="#summary">Summary</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#publications">Publications</a></li>
+        <li><a href="#education">Education</a></li>
+        <li><a href="#certifications">Certifications</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#videos">Videos</a></li>
+      </ul>
+    </nav>
+    
     <div class="theme-toggle-container">
-        <button class="toggle" onclick="toggleTheme()">🌙 Toggle Theme</button>
+        <button class="toggle" id="theme-toggle" aria-label="Toggle theme">Toggle Theme</button>
     </div>
     </aside>
 
@@ -631,118 +604,110 @@
       Built with <i class="fas fa-heart" style="color: #e03a3a;"></i> by <a href="https://github.com/rohitm487">Rohit Kumar Mishra</a> | Hosted on GitHub Pages
     </footer>
   </main>
-
 <script>
-    // Theme toggling functionality
-    function toggleTheme() {
-      document.body.classList.toggle('light');
-      if (document.body.classList.contains('light')) {
-        localStorage.setItem('theme', 'light');
-      } else {
-        localStorage.setItem('theme', 'dark');
+document.addEventListener('DOMContentLoaded', () => {
+  // --- Theme Toggling ---
+  const themeToggle = document.getElementById('theme-toggle');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+  let currentTheme = localStorage.getItem('theme');
+
+  function applyTheme(theme) {
+    if (theme === 'dark') {
+      document.body.classList.remove('light');
+      themeToggle.innerHTML = '☀️ Light Mode';
+    } else {
+      document.body.classList.add('light');
+      themeToggle.innerHTML = '🌙 Dark Mode';
+    }
+    localStorage.setItem('theme', theme);
+  }
+
+  // Apply saved theme or system preference
+  applyTheme(currentTheme || (prefersDark.matches ? 'dark' : 'light'));
+
+  // Toggle button listener
+  themeToggle.addEventListener('click', () => {
+    const newTheme = document.body.classList.contains('light') ? 'dark' : 'light';
+    applyTheme(newTheme);
+  });
+
+  // --- Search functionality ---
+  function initFuseSearch() {
+    const searchInput = document.getElementById('searchInput');
+    const elementsToIndex = document.querySelectorAll(
+      'main > h1, main > p, section > h2, .card, table, #certifications ul, .video-container'
+    );
+
+    const data = Array.from(elementsToIndex).map(el => ({
+      element: el,
+      text: el.innerText.replace(/\s+/g, ' ').trim()
+    }));
+
+    const fuse = new Fuse(data, { keys: ['text'], threshold: 0.3 });
+
+    function highlightText(element, query) {
+      const regex = new RegExp(query, "gi");
+      const walk = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+      let node;
+      const nodesToProcess = [];
+
+      while ((node = walk.nextNode())) {
+        if (node.parentNode.closest('.categories-tags-section span')) {
+          continue;
+        }
+        if (node.nodeValue.match(regex)) {
+          nodesToProcess.push(node);
+        }
       }
-      updateToggleButtonText();
+
+      nodesToProcess.forEach(textNode => {
+        const wrapper = document.createElement("span");
+        wrapper.className = 'search-highlight-wrapper';
+        wrapper.innerHTML = textNode.nodeValue.replace(regex, match => `<mark>${match}</mark>`);
+        textNode.parentNode.replaceChild(wrapper, textNode);
+      });
     }
 
-    // Apply saved theme on load
-    document.addEventListener('DOMContentLoaded', () => {
-      // --- Theme Toggling ---
-      const themeToggle = document.getElementById('theme-toggle');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-      let currentTheme = localStorage.getItem('theme');
-
-      function applyTheme(theme) {
-        if (theme === 'dark') {
-          document.body.classList.remove('light');
-          themeToggle.innerHTML = '☀️ Light Mode';
-        } else {
-            toggleButton.innerHTML = '🌙 Dark Theme';
-        }
-    }
-
-    // Search functionality
-    function initFuseSearch() {
-      const searchInput = document.getElementById('searchInput');
-      
-      // --- THIS IS THE FINAL FIX ---
-      // Create the most granular index possible by selecting every individual content block.
-      const elementsToIndex = document.querySelectorAll(
-        'main > h1, main > p, section > h2, .card, table, #certifications ul, .video-container'
-      );
-      
-      const data = Array.from(elementsToIndex).map(el => ({
-        element: el,
-        text: el.innerText.replace(/\s+/g, ' ').trim()
-      }));
-
-      const fuse = new Fuse(data, { keys: ['text'], threshold: 0.3 });
-
-      function highlightText(element, query) {
-        const regex = new RegExp(query, "gi");
-        const walk = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
-        let node;
-        const nodesToProcess = [];
-
-        while ((node = walk.nextNode())) {
-            if (node.parentNode.closest('.categories-tags-section span')) {
-                continue;
-            }
-            if (node.nodeValue.match(regex)) {
-                nodesToProcess.push(node);
-            }
-        }
-
-        nodesToProcess.forEach(textNode => {
-          const wrapper = document.createElement("span");
-          wrapper.className = 'search-highlight-wrapper'; 
-          wrapper.innerHTML = textNode.nodeValue.replace(regex, match => `<mark>${match}</mark>`);
-          textNode.parentNode.replaceChild(wrapper, textNode);
-        });
-      }
-
-      function resetHighlighting() {
-          elementsToIndex.forEach(el => {
-              el.querySelectorAll('span.search-highlight-wrapper').forEach(wrapper => {
-                  wrapper.replaceWith(wrapper.textContent);
-              });
-          });
-      }
-
-      searchInput.addEventListener('input', function() {
-        resetHighlighting();
-        const query = this.value.trim();
-        
-        // When search is cleared, show everything and their parent sections
-        if (query === '') {
-            elementsToIndex.forEach(el => {
-                el.style.display = '';
-                // Also ensure the parent <section> is visible
-                if (el.closest('section')) {
-                    el.closest('section').style.display = '';
-                }
-            });
-            return;
-        }
-
-        const results = fuse.search(query);
-        const matchedElements = results.map(result => result.item.element);
-
-        // Hide ALL indexed elements first
-        elementsToIndex.forEach(el => el.style.display = 'none');
-        
-        // Then, show ONLY the matched elements and their parent sections
-        matchedElements.forEach(el => {
-            el.style.display = '';
-            // Also ensure the parent <section> is visible
-            if (el.closest('section')) {
-                el.closest('section').style.display = '';
-            }
-            highlightText(el, query);
+    function resetHighlighting() {
+      elementsToIndex.forEach(el => {
+        el.querySelectorAll('span.search-highlight-wrapper').forEach(wrapper => {
+          wrapper.replaceWith(wrapper.textContent);
         });
       });
     }
-  </script>
 
+    searchInput.addEventListener('input', function() {
+      resetHighlighting();
+      const query = this.value.trim();
 
+      if (query === '') {
+        elementsToIndex.forEach(el => {
+          el.style.display = '';
+          if (el.closest('section')) {
+            el.closest('section').style.display = '';
+          }
+        });
+        return;
+      }
+
+      const results = fuse.search(query);
+      const matchedElements = results.map(result => result.item.element);
+
+      elementsToIndex.forEach(el => el.style.display = 'none');
+
+      matchedElements.forEach(el => {
+        el.style.display = '';
+        if (el.closest('section')) {
+          el.closest('section').style.display = '';
+        }
+        highlightText(el, query);
+      });
+    });
+  }
+
+  // Initialize search
+  initFuseSearch();
+});
+</script>
 </body>
 </html>
