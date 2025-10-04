@@ -703,11 +703,10 @@
     </footer>
   </main>
 
-  <script>
+<script>
     // Theme toggling functionality
     function toggleTheme() {
       document.body.classList.toggle('light');
-      // Optionally save theme preference to localStorage
       if (document.body.classList.contains('light')) {
         localStorage.setItem('theme', 'light');
       } else {
@@ -722,6 +721,7 @@
         document.body.classList.add('light');
       }
       updateToggleButtonText();
+      initFuseSearch();
     });
 
     // Update button text based on current theme
@@ -733,85 +733,90 @@
             toggleButton.innerHTML = '🌙 Dark Theme';
         }
     }
-    //search
 
-      document.addEventListener('DOMContentLoaded', () => {
-    initFuseSearch();
-  });
-
-  function initFuseSearch() {
-    const searchInput = document.getElementById('searchInput');
-    const sections = document.querySelectorAll('main section, main .card, main table');
-
-    // Build data array for Fuse.js
-    const data = Array.from(sections).map((el, index) => {
-      return {
-        id: index,
+    // Search functionality
+    function initFuseSearch() {
+      const searchInput = document.getElementById('searchInput');
+      
+      // --- THIS IS THE FINAL FIX ---
+      // Create the most granular index possible by selecting every individual content block.
+      const elementsToIndex = document.querySelectorAll(
+        'main > h1, main > p, section > h2, .card, table, #certifications ul, .video-container'
+      );
+      
+      const data = Array.from(elementsToIndex).map(el => ({
         element: el,
         text: el.innerText.replace(/\s+/g, ' ').trim()
-      };
-    });
+      }));
 
-    // Fuse.js options
-    const options = {
-      keys: ['text'],
-      threshold: 0.3, // Fuzziness level (0.0 = exact, 1.0 = very fuzzy)
-      includeMatches: true
-    };
+      const fuse = new Fuse(data, { keys: ['text'], threshold: 0.3 });
 
-    const fuse = new Fuse(data, options);
+      function highlightText(element, query) {
+        const regex = new RegExp(query, "gi");
+        const walk = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+        let node;
+        const nodesToProcess = [];
 
-    function highlightText(element, query) {
-      // unwrap any existing marks in this element
-      element.querySelectorAll("mark").forEach(mark => {
-        mark.replaceWith(mark.textContent);
-      });
-
-      const walk = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
-      const regex = new RegExp(query, "gi");
-      let node;
-      const nodesToProcess = [];
-
-      while (node = walk.nextNode()) {
-        if (node.nodeValue.match(regex)) {
-          nodesToProcess.push(node);
+        while ((node = walk.nextNode())) {
+            if (node.parentNode.closest('.categories-tags-section span')) {
+                continue;
+            }
+            if (node.nodeValue.match(regex)) {
+                nodesToProcess.push(node);
+            }
         }
+
+        nodesToProcess.forEach(textNode => {
+          const wrapper = document.createElement("span");
+          wrapper.className = 'search-highlight-wrapper'; 
+          wrapper.innerHTML = textNode.nodeValue.replace(regex, match => `<mark>${match}</mark>`);
+          textNode.parentNode.replaceChild(wrapper, textNode);
+        });
       }
 
-      nodesToProcess.forEach(textNode => {
-        const span = document.createElement("span");
-        span.innerHTML = textNode.nodeValue.replace(regex, match => `<mark>${match}</mark>`);
-        textNode.parentNode.replaceChild(span, textNode);
+      function resetHighlighting() {
+          elementsToIndex.forEach(el => {
+              el.querySelectorAll('span.search-highlight-wrapper').forEach(wrapper => {
+                  wrapper.replaceWith(wrapper.textContent);
+              });
+          });
+      }
+
+      searchInput.addEventListener('input', function() {
+        resetHighlighting();
+        const query = this.value.trim();
+        
+        // When search is cleared, show everything and their parent sections
+        if (query === '') {
+            elementsToIndex.forEach(el => {
+                el.style.display = '';
+                // Also ensure the parent <section> is visible
+                if (el.closest('section')) {
+                    el.closest('section').style.display = '';
+                }
+            });
+            return;
+        }
+
+        const results = fuse.search(query);
+        const matchedElements = results.map(result => result.item.element);
+
+        // Hide ALL indexed elements first
+        elementsToIndex.forEach(el => el.style.display = 'none');
+        
+        // Then, show ONLY the matched elements and their parent sections
+        matchedElements.forEach(el => {
+            el.style.display = '';
+            // Also ensure the parent <section> is visible
+            if (el.closest('section')) {
+                el.closest('section').style.display = '';
+            }
+            highlightText(el, query);
+        });
       });
     }
-
-    searchInput.addEventListener('input', function() {
-      const query = this.value.trim();
-
-    // Reset all sections first (remove old highlights)
-    data.forEach(item => {
-      item.element.style.display = '';
-      item.element.querySelectorAll("mark").forEach(mark => {
-        mark.replaceWith(mark.textContent); // unwrap marks
-      });
-    });
-
-    if (query === '') return;
-
-    const results = fuse.search(query);
-
-    // Hide all
-    data.forEach(item => item.element.style.display = 'none');
-
-    // Show and highlight matches
-    results.forEach(result => {
-      const el = result.item.element;
-      el.style.display = '';
-      highlightText(el, query);
-    });
-  });
-
-  }
   </script>
+
+
 </body>
 </html>
