@@ -323,37 +323,55 @@
     footer a {
         color: var(--muted);
     }
-
-    /* Responsive adjustments */
+    /* Tablet / small desktop */
     @media (max-width: 1024px) {
       body {
         flex-direction: column;
       }
 
       aside {
-        width: 100%;
-        height: auto;
-        position: relative;
+        width: 100% !important;       /* override clamp() */
+        height: auto;                  /* allow natural height */
+        position: relative;            /* remove sticky */
+        flex-shrink: 1;                /* allow shrinking if needed */
         border-right: none;
         border-bottom: 1px solid var(--card-border);
+        overflow: visible;             /* allow scrolling if content exceeds */
       }
+
+      .menu-toggle {
+        display: block;                /* show toggle button */
+      }
+
       main {
-          padding: 2rem 1.5rem;
+        padding: 2rem 1.5rem;
       }
-      /* REMOVED .video-card rules as .video-container is better */
     }
-    
-    /* ADDED: New breakpoint for small mobile devices */
+
+    /* Small mobile devices */
     @media (max-width: 600px) {
-      main {
-        padding: 1.5rem 1rem;
+      aside {
+        padding: 1rem;                 /* reduce sidebar padding */
       }
-      h1 { font-size: 1.8em; }
-      h2 { font-size: 1.4em; }
-      .project-grid, .video-grid {
-        grid-template-columns: 1fr;
+
+      main {
+        padding: 1.5rem 1rem;          /* reduce main padding */
+      }
+
+      h1 {
+        font-size: 1.8em;
+      }
+
+      h2 {
+        font-size: 1.4em;
+      }
+
+      .project-grid,
+      .video-grid {
+        grid-template-columns: 1fr;    /* stack items vertically */
       }
     }
+
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
