@@ -52,16 +52,8 @@
       text-decoration: none;
       transition: color 0.2s;
     }
-    a:hover {
-      text-decoration: underline;
-      color: var(--accent);
-    }
-    mark {
-      background-color: var(--highlight-bg);
-      color: inherit;
-      padding: 2px 0;
-      border-radius: 3px;
-    }
+    a:hover { text-decoration: underline; color: var(--accent); }
+    mark { background-color: var(--highlight-bg); color: inherit; padding: 2px 0; border-radius: 3px; }
 
     /* Sidebar */
     aside {
@@ -86,29 +78,11 @@
       border: 3px solid var(--accent);
       object-fit: cover;
     }
-    .name {
-      font-size: 1.5em;
-      font-weight: 600;
-      margin: 0.5rem 0 0.2rem;
-      text-align: center;
-      color: var(--accent);
-    }
-    .bio {
-      font-size: 0.9em;
-      margin: 0.2rem 0;
-      color: var(--muted);
-      text-align: center;
-    }
+    .name { font-size: 1.5em; font-weight: 600; margin: 0.5rem 0 0.2rem; text-align: center; color: var(--accent); }
+    .bio { font-size: 0.9em; margin: 0.2rem 0; color: var(--muted); text-align: center; }
     .social-links { padding: 1.5rem 0; text-align: center; }
-    .social-links a {
-      color: var(--muted);
-      margin: 0 0.6rem;
-      font-size: 1.2em;
-      transition: color 0.2s;
-    }
+    .social-links a { color: var(--muted); margin: 0 0.6rem; font-size: 1.2em; transition: color 0.2s; }
     .social-links a:hover { color: var(--accent); text-decoration: none; }
-
-    /* Navigation */
     nav ul { list-style: none; padding: 0; margin: 0; }
     nav li { margin: 0.5rem 0; }
     nav a {
@@ -119,11 +93,7 @@
       border-radius: 6px;
       transition: background 0.2s, color 0.2s;
     }
-    nav a:hover, nav a.active {
-      background: var(--card-border);
-      color: var(--accent);
-      text-decoration: none;
-    }
+    nav a:hover, nav a.active { background: var(--card-border); color: var(--accent); text-decoration: none; }
     .theme-toggle-container { margin-top: auto; padding-top: 1.5rem; text-align: center; }
     .toggle {
       background: var(--card-border);
@@ -136,8 +106,6 @@
       transition: all 0.2s;
     }
     .toggle:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
-
-    /* Hamburger Menu Button */
     .menu-toggle {
       display: none;
       background: none;
@@ -147,13 +115,10 @@
       border-radius: 6px;
       cursor: pointer;
       font-size: 1.2rem;
-      position: absolute;
-      top: 2rem;
-      right: 1.5rem;
       z-index: 1000;
     }
     
-    /* Main Content Area */
+    /* Main Content */
     main {
       flex: 1;
       padding: 2rem 3rem;
@@ -187,66 +152,66 @@
 
     /* --- RESPONSIVE ADJUSTMENTS --- */
     
-    /* For tablets and smaller devices */
     @media (max-width: 1024px) {
-      /* This is the main fix: stack the sidebar and main content */
       body {
         flex-direction: column;
       }
 
-      /* Adjust the sidebar to be a header bar */
       aside {
         width: 100%;
         height: auto;
-        position: relative; /* Overrides sticky positioning */
+        position: relative;
         border-right: none;
         border-bottom: 1px solid var(--card-border);
         padding-bottom: 1.5rem;
       }
 
-      /* Adjust the layout within the sidebar for mobile */
-      aside .sidebar-content {
+      .sidebar-content {
         display: flex;
         align-items: center;
         justify-content: space-between;
       }
-      aside header {
-        text-align: left;
+      
+      /* This is the new group for your avatar and name */
+      .sidebar-header {
+        display: flex;
+        align-items: center;
       }
+      
       .avatar { margin: 0 1rem 0 0; }
       .avatar img { width: 60px; height: 60px; }
+      
+      aside header { text-align: left; }
       .name { font-size: 1.2em; text-align: left; margin: 0; }
       .bio { text-align: left; margin: 0; }
-      .social-links, .theme-toggle-container { display: none; } /* Hide these to simplify header */
+      
+      .social-links, .theme-toggle-container { display: none; }
 
-      main {
-          padding: 2rem 1.5rem;
-      }
-
-      /* Mobile Menu Logic */
-      .menu-toggle {
-        display: block; /* Show the hamburger button */
-        position: static; /* Remove absolute positioning */
-        margin-left: auto;
-      }
+      .menu-toggle { display: block; }
+      
       nav {
-        display: none; /* Hide navigation by default */
+        display: none;
         width: 100%;
-        margin-top: 1.5rem;
-        padding-top: 1.5rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
         border-top: 1px solid var(--card-border);
       }
+      
       aside.nav-open nav {
-        display: block; /* Show navigation when menu is open */
+        display: block;
       }
+      
       nav a {
-        padding: 0.8rem 0; /* Make tap targets larger */
+        padding: 0.8rem 0;
         font-size: 1.1em;
         text-align: center;
       }
+      
+      main {
+          padding: 2rem 1.5rem;
+      }
     }
     
-    /* For small mobile phones */
     @media (max-width: 600px) {
       html { font-size: 94%; }
       main { padding: 1.5rem 1rem; }
@@ -258,43 +223,47 @@
 </style>
 </head>
 <body>
-  <aside>
+<aside>
     <div class="sidebar-content">
-      <div class="avatar">
-        <img src="https://avatars.githubusercontent.com/u/30938155?v=4" alt="Rohit Kumar Mishra">
-      </div>
-      <header>
-          <h1 class="name">Rohit Kumar Mishra</h1>
-          <p class="bio">AI Engineer</p>
-          <p class="bio">Gurgaon, Haryana, India</p>
-      </header>
-      <div class="social-links">
-        <a href="https://linkedin.com/in/rohitml/" target="_blank" rel="noopener noreferrer" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-        <a href="https://github.com/rohitm487" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
-        <a href="mailto:rohitm487@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+      <div class="sidebar-header">
+        <div class="avatar">
+          <img src="https://avatars.githubusercontent.com/u/30938155?v=4" alt="Rohit Kumar Mishra">
+        </div>
+        <header>
+            <h1 class="name">Rohit Kumar Mishra</h1>
+            <p class="bio">AI Engineer</p>
+            <p class="bio">Gurgaon, Haryana, India</p>
+        </header>
       </div>
       <button id="menu-toggle" class="menu-toggle" aria-label="Open navigation menu">
         <i class="fas fa-bars"></i>
       </button>
-
-      <nav>
-        <ul>
-          <li><a href="#summary">Summary</a></li>
-          <li><a href="#experience">Experience</a></li>
-          <li><a href="#skills">Skills</a></li>
-          <li><a href="#publications">Publications</a></li>
-          <li><a href="#education">Education</a></li>
-          <li><a href="#certifications">Certifications</a></li>
-          <li><a href="#projects">Projects</a></li>
-          <li><a href="#videos">Videos</a></li>
-        </ul>
-      </nav>
     </div>
+
+    <div class="social-links">
+      <a href="https://linkedin.com/in/rohitml/" target="_blank" rel="noopener noreferrer" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+      <a href="https://github.com/rohitm487" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
+      <a href="mailto:rohitm487@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+    </div>
+
+    <nav>
+      <ul>
+        <li><a href="#summary">Summary</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#publications">Publications</a></li>
+        <li><a href="#education">Education</a></li>
+        <li><a href="#certifications">Certifications</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#videos">Videos</a></li>
+      </ul>
+    </nav>
+    
     <div class="theme-toggle-container">
         <button class="toggle" id="theme-toggle" aria-label="Toggle theme">Toggle Theme</button>
     </div>
-  </aside>
-
+    </aside>
+    
   <main>
     <div class="top-right-section">
       <div class="search-bar">
