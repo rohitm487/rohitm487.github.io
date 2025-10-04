@@ -715,9 +715,13 @@ document.addEventListener('DOMContentLoaded', () => {
     applyTheme(newTheme);
   });
 
-  // --- Search functionality ---
+// --- Search functionality ---
   function initFuseSearch() {
     const searchInput = document.getElementById('searchInput');
+    // Define the top-level content blocks that we will hide/show
+    const contentBlocks = document.querySelectorAll('main > section, main > h1, main > p');
+    
+    // Define all the detailed elements we want to make searchable
     const elementsToIndex = document.querySelectorAll(
       'main > h1, main > p, section > h2, .card, table, #certifications ul, .video-container'
     );
@@ -753,10 +757,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function resetHighlighting() {
-      elementsToIndex.forEach(el => {
-        el.querySelectorAll('span.search-highlight-wrapper').forEach(wrapper => {
-          wrapper.replaceWith(wrapper.textContent);
-        });
+      document.querySelectorAll('span.search-highlight-wrapper').forEach(wrapper => {
+        wrapper.replaceWith(wrapper.textContent);
       });
     }
 
@@ -764,28 +766,31 @@ document.addEventListener('DOMContentLoaded', () => {
       resetHighlighting();
       const query = this.value.trim();
 
+      // If the search bar is empty, show all content blocks and exit
       if (query === '') {
-        elementsToIndex.forEach(el => {
-          el.style.display = '';
-          if (el.closest('section')) {
-            el.closest('section').style.display = '';
-          }
-        });
+        contentBlocks.forEach(block => block.style.display = '');
         return;
       }
 
       const results = fuse.search(query);
       const matchedElements = results.map(result => result.item.element);
+      const blocksToShow = new Set();
 
-      elementsToIndex.forEach(el => el.style.display = 'none');
-
+      // For each matched element, find its parent content block and add it to a Set
       matchedElements.forEach(el => {
-        el.style.display = '';
-        if (el.closest('section')) {
-          el.closest('section').style.display = '';
+        const parentBlock = el.closest('main > section, main > h1, main > p');
+        if (parentBlock) {
+          blocksToShow.add(parentBlock);
         }
+        // Apply highlighting only to the element that matched
         highlightText(el, query);
       });
+
+      // First, hide all content blocks
+      contentBlocks.forEach(block => block.style.display = 'none');
+      
+      // Then, show only the blocks that contained a match
+      blocksToShow.forEach(block => block.style.display = '');
     });
   }
 
