@@ -130,7 +130,7 @@
 
     .theme-toggle-container {
       margin-top: auto;
-      margin-bottom: 4rem; /* adds space from bottom */
+      margin-bottom: 6rem; /* adds space from bottom */
       text-align: center;
     }
     .toggle {
@@ -364,6 +364,7 @@
       }
 
     }
+    
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -520,11 +521,11 @@
     <section id="publications">
       <h2><i class="fas fa-book" style="color: var(--accent);"></i> Publications</h2>
       <div class="card">
-        <h3><a href="#" target="_blank">Xplainable AI for deep learning model on PCOD analysis</a></h3>
+        <h3><a href="https://www.sciencedirect.com/science/article/abs/pii/B9780323953153000127" target="_blank">Xplainable AI for deep learning model on PCOD analysis</a></h3>
         <p>Elsevier | 2024</p>
       </div>
       <div class="card">
-        <h3><a href="#" target="_blank">Exploring the Usability of Quantum Machine Learning for EEG Signal Classification</a></h3>
+        <h3><a href="https://link.springer.com/chapter/10.1007/978-3-031-56700-1_34" target="_blank">Exploring the Usability of Quantum Machine Learning for EEG Signal Classification</a></h3>
         <p>Springer Nature | 2023</p>
       </div>
     </section>
@@ -539,11 +540,36 @@
 
     <section id="project-demo">
       <h2>Project Demos</h2>
-      <ul>
-        <li><a href="https://rohitm487.github.io/devnagari-lang-web/" target="_blank">Devnagari Lang</a></li>
-        <li><a href="https://github.com/rohitm487/Causal_Inference_in_Python/" target="_blank">Causal interfere notes</a></li>
-        <li><a href="https://github.com/rohitm487/ppt2vid" target="_blank">PPT to Video</a></li>
-      </ul>
+      <!-- PPT to Video Project Card with YouTube Video -->
+      <div class="card project-card">
+        <h3>PPT to Video</h3>
+        <div class="video-card">
+          <iframe width="560" height="315"
+                  src="https://www.youtube.com/embed/hFuzCJ7M3tM"
+                  frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen>
+          </iframe>
+        </div>
+        <p>Demonstration of converting PowerPoint presentations to videos automatically.</p>
+        <a href="https://github.com/rohitm487/ppt2vid" target="_blank">View on GitHub</a>
+      </div>
+      <!-- Devnagari Lang Project Card -->
+      <div class="card project-card">
+        <h3>Devnagari Lang</h3>
+        <a href="https://rohitm487.github.io/devnagari-lang-web/" target="_blank">
+          <img src="dev-lang.png" alt="Devnagari Lang Project" style="width:80%; max-width:300px; border-radius:8px; display:block; margin:auto;">
+        </a>
+        <p>Devnagari language</p>
+      </div>
+      <!-- Causal Inference Notes Card -->
+      <div class="card project-card">
+        <h3>Causal Inference Notes</h3>
+        <a href="https://github.com/rohitm487/Causal_Inference_in_Python/" target="_blank">View on GitHub</a>
+        <p>Collection of Python notebooks and notes for causal inference projects.</p>
+      </div>
+
+
+
     </section>
 
     <section id="videos">
@@ -580,7 +606,7 @@
 
     <section id="articles">
       <h2>Articles</h2>
-    <!-- Links to articles or PDFs -->
+
     </section>
     <footer>
       Built with <i class="fas fa-heart" style="color: #e03a3a;"></i> by <a href="https://github.com/rohitm487">Rohit Kumar Mishra</a> | Hosted on GitHub Pages
@@ -645,39 +671,56 @@
 
     const fuse = new Fuse(data, options);
 
+    function highlightText(element, query) {
+      // unwrap any existing marks in this element
+      element.querySelectorAll("mark").forEach(mark => {
+        mark.replaceWith(mark.textContent);
+      });
+
+      const walk = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+      const regex = new RegExp(query, "gi");
+      let node;
+      const nodesToProcess = [];
+
+      while (node = walk.nextNode()) {
+        if (node.nodeValue.match(regex)) {
+          nodesToProcess.push(node);
+        }
+      }
+
+      nodesToProcess.forEach(textNode => {
+        const span = document.createElement("span");
+        span.innerHTML = textNode.nodeValue.replace(regex, match => `<mark>${match}</mark>`);
+        textNode.parentNode.replaceChild(span, textNode);
+      });
+    }
+
     searchInput.addEventListener('input', function() {
       const query = this.value.trim();
 
-      // Reset all sections first
-      data.forEach(item => {
-        item.element.style.display = '';
-        item.element.innerHTML = item.element.innerHTML.replace(/<mark>(.*?)<\/mark>/gi, '$1');
-      });
-
-      if (query === '') return;
-
-      const results = fuse.search(query);
-
-      // Hide all first
-      data.forEach(item => item.element.style.display = 'none');
-
-      // Show matching results with highlights
-      results.forEach(result => {
-        const el = result.item.element;
-        el.style.display = '';
-
-        // Highlight matches
-        result.matches.forEach(match => {
-          match.indices.forEach(([start, end]) => {
-            const originalText = el.innerText;
-            const highlighted = originalText.substring(0, start) +
-                                '<mark>' + originalText.substring(start, end + 1) + '</mark>' +
-                                originalText.substring(end + 1);
-            el.innerHTML = highlighted;
-          });
-        });
+    // Reset all sections first (remove old highlights)
+    data.forEach(item => {
+      item.element.style.display = '';
+      item.element.querySelectorAll("mark").forEach(mark => {
+        mark.replaceWith(mark.textContent); // unwrap marks
       });
     });
+
+    if (query === '') return;
+
+    const results = fuse.search(query);
+
+    // Hide all
+    data.forEach(item => item.element.style.display = 'none');
+
+    // Show and highlight matches
+    results.forEach(result => {
+      const el = result.item.element;
+      el.style.display = '';
+      highlightText(el, query);
+    });
+  });
+
   }
   </script>
 </body>
