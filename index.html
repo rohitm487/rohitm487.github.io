@@ -397,6 +397,71 @@
         font-size: 1.4em;
       }
     }
+
+    /* Responsive Video Grid */
+    #videos .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    #videos .video-item {
+      background: var(--bg-lighter);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 0.8rem;
+      transition: border-color 0.2s;
+    }
+
+    #videos .video-item:hover {
+      border-color: var(--accent);
+    }
+
+    #videos .video-item p {
+      margin-top: 0.8rem;
+      font-size: 0.9em;
+      text-align: center;
+      color: var(--text);
+    }
+
+    /* Responsive Project Grid */
+    #project-demo .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    #project-demo .project-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: border-color 0.2s;
+    }
+
+    #project-demo .project-card:hover {
+      border-color: var(--accent);
+    }
+
+    #project-demo .project-card h3 {
+      margin-top: 0;
+      margin-bottom: 0.8rem;
+      color: var(--accent);
+    }
+
+    #project-demo .project-card p {
+      flex-grow: 1;
+      margin-bottom: 0.8rem;
+      color: var(--text);
+      font-size: 0.9em;
+    }
+
+    #project-demo .project-card a {
+      margin-top: 0.5rem;
+      color: var(--link-color);
+      font-size: 0.9em;
+    }
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -573,60 +638,60 @@
 
 
 
-<section id="project-demo">
+    <section id="project-demo">
       <h2>Project Demos</h2>
+      <div class="project-grid">
 
-      <div class="card project-card">
-        <h3>PPT to Video</h3>
-        <div class="video-container">
-          <iframe src="https://www.youtube.com/embed/hFuzCJ7M3tM" frameborder="0" allowfullscreen>
-          </iframe>
+        <div class="card project-card">
+          <h3>PPT to Video</h3>
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/hFuzCJ7M3tM" frameborder="0" allowfullscreen></iframe>
+          </div>
+          <p>Demonstration of converting PowerPoint presentations to videos automatically.</p>
+          <a href="https://github.com/rohitm487/ppt2vid" target="_blank" rel="noopener noreferrer">View on GitHub</a>
         </div>
-        <p>Demonstration of converting PowerPoint presentations to videos automatically.</p>
-        <a href="https://github.com/rohitm487/ppt2vid" target="_blank" rel="noopener noreferrer">View on GitHub</a>
-      </div>
 
-      <div class="card project-card">
-        <h3>Devanagari Lang</h3>
-        <a href="https://rohitm487.github.io/devnagari-lang-web/" target="_blank" rel="noopener noreferrer">
-          <img 
-            src="dev-lang.png" 
-            alt="Devanagari Lang Project" 
-            style="width: 100%; height: auto; border-radius: 8px; display: block; margin: 1rem 0;">
-        </a>
-        <a href="https://github.com/rohitm487/devnagari-lang-web" target="_blank" rel="noopener noreferrer">View on GitHub</a>
-      </div>
+        <div class="card project-card">
+          <h3>Devanagari Lang</h3>
+          <a href="https://rohitm487.github.io/devnagari-lang-web/" target="_blank" rel="noopener noreferrer">
+            <img 
+              src="dev-lang.png" 
+              alt="Devanagari Lang Project" 
+              style="width: 100%; height: auto; border-radius: 8px; display: block; margin: 1rem 0;">
+          </a>
+          <a href="https://github.com/rohitm487/devnagari-lang-web" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+        </div>
 
-      <div class="card project-card">
-        <h3>Causal Inference Notes</h3>
-        <p>Collection of Python notebooks and notes for causal inference projects.</p>
-        <a href="https://github.com/rohitm487/Causal_Inference_in_Python/" target="_blank" rel="noopener noreferrer">View on GitHub</a>
-      </div>
+        <div class="card project-card">
+          <h3>Causal Inference Notes</h3>
+          <p>Collection of Python notebooks and notes for causal inference projects.</p>
+          <a href="https://github.com/rohitm487/Causal_Inference_in_Python/" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+        </div>
 
-    </section>
-
-    <section id="videos">
-      <h2>Videos</h2>
-
-      <div class="card"> 
-      <div class="video-container">
-        <iframe src="https://www.youtube.com/embed/4lR37Vx4hWM" frameborder="0" allowfullscreen>
-        </iframe>
-        <p>Introduction to AI Agents</p>
-      </div>
-
-      <div class="video-container">
-        <iframe src="https://www.youtube.com/embed/3qdYEOHQZ68" frameborder="0" allowfullscreen>
-        </iframe>
-        <p>AI Agents 2 - Implementation of AI Agents from Scratch (ReAct Agent) - Part 1</p>
-      </div>
-
-      <div class="video-container">
-        <iframe src="https://www.youtube.com/embed/M4H4oLBolNw" frameborder="0" allowfullscreen>
-        </iframe>
-        <p>AI Agents 2.1 - Implementation of AI Agents from Scratch (ReAct Agent) - Part 2</p>
       </div>
     </section>
+
+
+
+<section id="videos">
+  <h2>Videos</h2>
+  <div class="video-grid">
+    <div class="video-container">
+      <iframe src="https://www.youtube.com/embed/4lR37Vx4hWM" frameborder="0" allowfullscreen></iframe>
+      <p>Introduction to AI Agents</p>
+    </div>
+
+    <div class="video-container">
+      <iframe src="https://www.youtube.com/embed/3qdYEOHQZ68" frameborder="0" allowfullscreen></iframe>
+      <p>AI Agents 2 - Implementation of AI Agents from Scratch (ReAct Agent) - Part 1</p>
+    </div>
+
+    <div class="video-container">
+      <iframe src="https://www.youtube.com/embed/M4H4oLBolNw" frameborder="0" allowfullscreen></iframe>
+      <p>AI Agents 2.1 - Implementation of AI Agents from Scratch (ReAct Agent) - Part 2</p>
+    </div>
+  </div>
+</section>
 
 
     <section id="articles">
