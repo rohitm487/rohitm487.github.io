@@ -74,15 +74,10 @@
 </head>
 <body>
     <header>
-        <h2>How to make Tensor Shapes Readable with `einops`</h2>
+        <h1>How to make Tensor Shapes Readable with `einops`</h1>
     </header>
 
     <main>
-        <div id="status" class="status-message">Loading Environment...</div>
-        
-        <div class="notice">
-            <strong>Browser Limitation:</strong> The interactive demos below use <code>NumPy</code> For full PyTorch examples, try Google Colab or your local environment.
-        </div>
 
         <section>
             <h2>🤔 The Problem with Traditional Tensor Operations</h2>
@@ -309,9 +304,8 @@ x = rearrange(x, '(b n) d -> b n d', b=batch_size)
         const editors = {};
         let pyodide;
 
-        const statusEl = document.getElementById('status');
+
         const updateStatus = (message) => { 
-            statusEl.textContent = message; 
             console.log(message);
         };
 
