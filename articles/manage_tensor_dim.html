@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Interactive Einops Demo with Pyodide + Monaco</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.50.0/min/vs/editor/editor.main.css">
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.50.0/min/vs/loader.js"></script>
+
+    <style>
+        :root {
+            --bg: #0d1117; --bg-lighter: #161b22; --text: #c9d1d9;
+            --accent: #58a6ff; --muted: #8b949e; --card-border: #30363d;
+            --success: #3fb950; --error: #f85149;
+        }
+        body {
+            font-family: 'Fira Code', monospace;
+            background: var(--bg); color: var(--text);
+            max-width: 1000px; margin: 0 auto; padding: 1.5rem;
+            line-height: 1.7;
+        }
+        header {
+            background: var(--bg-lighter); border-radius: 10px; padding: 1.25rem;
+            border: 1px solid var(--card-border); text-align: center;
+        }
+        h1 { color: var(--accent); margin: 0 0 .25rem 0; font-size: 1.6rem; }
+        h2, h3 { color: var(--text); border-bottom: 1px solid var(--card-border); padding-bottom: .3rem; margin-top: 2rem; }
+        p, li { color: var(--text); }
+        pre { background: var(--bg-lighter); border: 1px solid var(--card-border); color: var(--accent); padding: 1rem; border-radius: 6px; overflow: auto; font-size: .95rem; }
+        code { color: var(--accent); background: rgba(88, 166, 255, 0.1); padding: 0.15rem 0.3rem; border-radius: 3px; }
+        main { margin-top: 1.5rem; }
+        .example {
+            background: var(--bg-lighter); border: 1px solid var(--card-border);
+            padding: 1rem; border-radius: 8px; margin: 1.25rem 0;
+        }
+        .notice {
+            background: rgba(88, 166, 255, 0.08); border-left: 4px solid var(--accent);
+            padding: .75rem; border-radius: 6px; margin: 1rem 0;
+        }
+        .small { font-size: .95rem; color: var(--muted); }
+        .repl-container { margin-bottom: 1.5rem; }
+        .repl-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+        .repl-title h3 { margin: 0; border-bottom: none; padding-bottom: 0; display: inline-block; }
+        .btn {
+            padding: .35rem .75rem; border-radius: 6px; cursor: pointer;
+            border: 1px solid var(--card-border); font-weight: 600; font-size: .9rem;
+            transition: all 0.2s; font-family: 'Fira Code', monospace;
+        }
+        .btn:disabled { cursor: not-allowed; opacity: 0.6; }
+        .btn-run { background: var(--success); color: var(--bg); border-color: var(--success); }
+        .btn-run:hover:not(:disabled) { background: #318a42; border-color: #318a42; }
+        .btn-edit { background: var(--bg-lighter); color: var(--text); }
+        .btn-edit:hover { background: var(--card-border); }
+        .status-message {
+            text-align: center; padding: 1.5rem; font-size: 1.1rem;
+            color: var(--accent); background: var(--bg-lighter);
+            border-radius: 8px; border: 1px solid var(--card-border); margin-bottom: 1.5rem;
+        }
+        .editor {
+            height: 280px; border: 1px solid var(--card-border); border-radius: 6px;
+        }
+        .output {
+            margin-top: 0.75rem; background: var(--bg);
+            border: 1px solid var(--card-border); padding: 0.75rem;
+            border-radius: 6px; min-height: 50px;
+            white-space: pre-wrap; word-break: break-all;
+            color: var(--text); font-size: 0.9rem;
+        }
+        .output.error { color: var(--error); }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>How to make Tensor Shapes Readable with `einops`</h2>
+    </header>
+
+    <main>
+        <div id="status" class="status-message">Loading Environment...</div>
+        
+        <div class="notice">
+            <strong>Browser Limitation:</strong> The interactive demos below use <code>NumPy</code> since <code>PyTorch</code> cannot run in browsers. For full PyTorch examples, try Google Colab or your local environment.
+        </div>
+
+        <section>
+            <h2>🤔 The Problem with Traditional Tensor Operations</h2>
+            <p>If you've ever worked with tensors in PyTorch or TensorFlow with indices without einops. You know the pain of <code>reshape</code>, <code>permute</code>, <code>transpose</code>, and <code>view</code> operations. The tensor indices are not very readable to be honest. <strong>Einops</strong> library that makes tensor manipulation readable, reliable, and remarkably elegant.</p>
+            <p>Let's say you have an image batch with shape <code>(batch, channels, height, width)</code> and you want to flatten the spatial dimensions. Here's how you might do it traditionally:</p>
+            <h3>With numpy or (PyTorch, TensorFlow or Jax with traditional approach)</h3>
+            <pre>
+b, c, h, w = x.shape
+x = x.view(b, c, h * w)
+x = x.permute(0, 2, 1)
+            </pre>
+            <p><strong>Issues:</strong> Hard to read, easy to mess up dimension order, requires knowing exact shape beforehand.</p>
+            <h3>✅ With einops</h3>
+            <pre>
+from einops import rearrange
+x = rearrange(x, 'b c h w -> b (h w) c')
+            </pre>
+            <p><strong>Benefits:</strong> Self-documenting, explicit about transformations, catches errors at runtime.</p>
+        </section>
+
+        <section>
+            <h2>What Makes Einops Special?</h2>
+            <ul>
+                <li><strong>Readable:</strong> Operations are expressed in plain notation that matches mathematical intuition.</li>
+                <li><strong>Safe:</strong> Runtime checks ensure dimensions match your expectations, catching bugs early.</li>
+                <li><strong>Framework Agnostic:</strong> Works with NumPy, PyTorch, TensorFlow, JAX, and more using the same syntax.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2> The Three Core Operations</h2>
+            <p>Einops provides three fundamental operations that cover most tensor manipulation needs:</p>
+            <ol>
+                <li><strong>rearrange — Reshape and Permute</strong><br>Combines reshaping and transposing in a single, intuitive operation. Use it to:
+                    <ul>
+                        <li>Flatten or unflatten dimensions</li>
+                        <li>Change axis order</li>
+                        <li>Split or merge dimensions</li>
+                    </ul>
+                    <pre>b c h w → b (h w) c</pre>
+                    <p>Flattens spatial dimensions and moves channels to last position</p>
+                </li>
+                <li><strong>reduce — Aggregate Along Axes</strong><br>Perform reductions (mean, sum, max, min) while explicitly naming which dimensions to reduce:
+                    <ul>
+                        <li>Global average pooling</li>
+                        <li>Channel-wise statistics</li>
+                        <li>Batch aggregation</li>
+                    </ul>
+                    <pre>b c h w → b c</pre>
+                    <p>Takes mean across spatial dimensions (h and w)</p>
+                </li>
+                <li><strong>repeat — Tile Dimensions</strong><br>Expand tensors by repeating along new or existing dimensions:
+                    <ul>
+                        <li>Broadcasting operations</li>
+                        <li>Creating multiple copies</li>
+                        <li>Expanding to match batch sizes</li>
+                    </ul>
+                    <pre>b c → b c h w</pre>
+                    <p>Tiles values to create spatial dimensions</p>
+                </li>
+            </ol>
+        </section>
+
+        <section>
+            <h2>Examples</h2>
+            <p>Try running and editing these examples to see Einops in action:</p>
+
+            <div class="example repl-container">
+                <div class="repl-header">
+                    <div class="repl-title">
+                        <h3>Example 1: Rearrange — Flatten Spatial Dimensions</h3>
+                        <p class="small">Transform image format from (batch, channels, height, width) to (batch, pixels, channels) — common in Vision Transformers.</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-edit" id="btn-edit-1">Edit</button>
+                        <button class="btn btn-run" id="btn-run-1">Run</button>
+                    </div>
+                </div>
+                <div class="editor" id="editor-1"></div>
+                <pre class="output" id="output-1"></pre>
+                <script type="text/plain" class="initial-code">
+import numpy as np
+from einops import rearrange
+
+# Input: (batch, channels, height, width)
+x = np.random.randn(2, 3, 4, 4)
+x.dtype = float
+print("Original shape:", x.shape)
+
+# Rearrange to (batch, height*width, channels)
+y = rearrange(x, 'b c h w -> b (h w) c')
+print("After rearrange:", y.shape)
+print("First two vectors of the first batch:\n", y[0, :2, :])
+                </script>
+            </div>
+
+            <div class="example repl-container">
+                <div class="repl-header">
+                    <div class="repl-title">
+                        <h3>Example 2: Reduce — Global Average Pooling</h3>
+                        <p class="small">Calculate the mean across spatial dimensions — a common operation before classification layers.</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-edit" id="btn-edit-2">Edit</button>
+                        <button class="btn btn-run" id="btn-run-2">Run</button>
+                    </div>
+                </div>
+                <div class="editor" id="editor-2"></div>
+                <pre class="output" id="output-2"></pre>
+                <script type="text/plain" class="initial-code">
+import numpy as np
+from einops import reduce
+
+x = np.arange(16).reshape(1, 1, 4, 4)
+x.dtype = float
+print("Original shape:", x.shape)
+
+# Reduce by taking the mean over H and W
+y = reduce(x, 'b c h w -> b c', 'mean')
+print("After reduce (mean):", y.shape)
+print("Resulting values:", y)
+                </script>
+            </div>
+
+            <div class="example repl-container">
+                <div class="repl-header">
+                    <div class="repl-title">
+                        <h3>Example 3: Repeat — Broadcasting Values</h3>
+                        <p class="small">Expand a tensor by repeating values across new dimensions — useful for adding positional encodings.</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-edit" id="btn-edit-3">Edit</button>
+                        <button class="btn btn-run" id="btn-run-3">Run</button>
+                    </div>
+                </div>
+                <div class="editor" id="editor-3"></div>
+                <pre class="output" id="output-3"></pre>
+                <script type="text/plain" class="initial-code">
+import numpy as np
+from einops import repeat
+
+# Input: (batch, channels)
+x = np.array([[1], [2], [3]])
+print("Original shape:", x.shape)
+
+# Repeat to (batch, channels, height, width)
+y = repeat(x, 'b c -> b c h w', h=2, w=2)
+print("After repeat:", y.shape)
+print("Example tile (B=0, C=0):\n", y[0,0])
+                </script>
+            </div>
+
+            <div class="example repl-container">
+                <div class="repl-header">
+                    <div class="repl-title">
+                        <h3>Example 4: Your Turn — Experiment!</h3>
+                        <p class="small">Try your own transformations. Click Edit to modify the code and explore different patterns.</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-edit" id="btn-edit-4">Edit</button>
+                        <button class="btn btn-run" id="btn-run-4">Run</button>
+                    </div>
+                </div>
+                <div class="editor" id="editor-4"></div>
+                <pre class="output" id="output-4"></pre>
+                <script type="text/plain" class="initial-code">
+# Try editing this snippet!
+import numpy as np
+from einops import rearrange
+
+# (Batch, Height, Width, Channels)
+image_batch = np.zeros((10, 64, 64, 3))
+print("Original image batch shape:", image_batch.shape)
+
+# Convert to PyTorch-style (Batch, Channels, Height, Width)
+rearranged = rearrange(image_batch, 'b h w c -> b c h w')
+print("Rearranged shape:", rearranged.shape)
+                </script>
+            </div>
+        </section>
+
+        <section>
+            <h2> Real-World Use Cases</h2>
+            <ul>
+                <li><strong>Vision Transformers (ViT)</strong><br>
+                    <pre>
+# Split image into patches
+patches = rearrange(image, 'b c (h p1) (w p2) -> b (h w) (p1 p2 c)', p1=16, p2=16)
+                    </pre>
+                </li>
+                <li><strong>Multi-Head Attention</strong><br>
+                    <pre>
+# Split heads
+x = rearrange(x, 'b n (h d) -> b h n d', h=num_heads)
+
+# Merge heads back
+x = rearrange(x, 'b h n d -> b n (h d)')
+                    </pre>
+                </li>
+                <li><strong>Batch Processing</strong><br>
+                    <pre>
+# Combine batch and sequence dimensions for efficient processing
+x = rearrange(x, 'b n d -> (b n) d')
+
+# Split back
+x = rearrange(x, '(b n) d -> b n d', b=batch_size)
+                    </pre>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Key Takeaways</h2>
+            <ul>
+                <li><strong>Readability matters:</strong> Code is read more often than written. Einops makes your intent crystal clear.</li>
+                <li><strong>Catch bugs early:</strong> Runtime dimension checks prevent silent errors that plague traditional reshape operations.</li>
+                <li><strong>Think in transformations:</strong> Einops encourages you to think about what you're doing, not how to implement it.</li>
+                <li><strong>Works everywhere:</strong> One syntax across NumPy, PyTorch, TensorFlow, and JAX.</li>
+            </ul>
+        </section>
+    </main>
+
+    <script>
+        const editors = {};
+        let pyodide;
+
+        const statusEl = document.getElementById('status');
+        const updateStatus = (message) => { 
+            statusEl.textContent = message; 
+            console.log(message);
+        };
+
+        async function installPackages(pyodide) {
+            updateStatus('📦 Installing...');
+            await pyodide.loadPackage("micropip")
+            const numpyWheel = 'https://www.piwheels.org/simple/numpy/numpy-2.3.3-cp311-cp311-linux_armv6l.whl#sha256=9c43b8292ecebb349059b6cc4726b37a0bd7e45d11f7b1e91c73024226f32f83';
+            const einopsWheel = 'https://www.piwheels.org/simple/einops/einops-0.8.1-py3-none-any.whl#sha256=919387eb55330f5757c6bea9165c5ff5cfe63a642682ea788a6d472576d81737';
+
+            async function tryInstall(packages, retries = 3, delay = 1000) {
+                for (let i = 0; i < retries; i++) {
+                    try {
+                        const micropip = pyodide.pyimport('micropip');
+                        for (const pkg of packages) {
+                            await micropip.install(pkg);
+                            console.log(`Installed ${pkg}`);
+                        }
+                        return true;
+                    } catch (e) {
+                        console.warn(`Attempt ${i + 1} failed: ${e.message}`);
+                        if (i < retries - 1) await new Promise(resolve => setTimeout(resolve, delay));
+                    }
+                }
+                throw new Error('Failed to install packages after retries');
+            }
+
+            try {
+                await tryInstall([numpyWheel, einopsWheel]);
+                updateStatus(' Packages installed successfully');
+                return true;
+            } catch (e) {
+                console.warn('Wheel installation failed:', e);
+            }
+
+            try {
+                await tryInstall(['numpy==1.26.4', 'einops==0.8.0']);
+                updateStatus(' Packages installed successfully (fallback)');
+                return true;
+            } catch (e) {
+                console.warn('Package name installation failed:', e);
+            }
+
+            try {
+                await pyodide.loadPackage('numpy');
+                const micropip = pyodide.pyimport('micropip');
+                await micropip.install(einopsWheel);
+                console.log('Installed numpy via loadPackage, einops via micropip');
+                updateStatus('Packages installed successfully (loadPackage fallback)');
+                return true;
+            } catch (e) {
+                console.error('All installation methods failed:', e);
+                throw new Error(`Failed to install required packages: ${e.message}`);
+            }
+        }
+
+        async function main() {
+            try {
+                updateStatus('Initializing...');
+                pyodide = await loadPyodide({
+                    indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.2/full/'
+                });
+                console.log('Pyodide loaded');
+
+                await installPackages(pyodide);
+
+                require.config({ 
+                    paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.50.0/min/vs' } 
+                });
+                
+                await new Promise((resolve, reject) => {
+                    require(['vs/editor/editor.main'], () => {
+                        console.log('Monaco Editor loaded');
+                        document.querySelectorAll('.editor').forEach(editorEl => {
+                            const id = editorEl.id.split('-')[1];
+                            const container = editorEl.closest('.repl-container');
+                            const initialCode = container.querySelector('.initial-code').textContent.trim();
+                            
+                            const editor = monaco.editor.create(editorEl, {
+                                value: initialCode,
+                                language: 'python',
+                                theme: 'vs-dark',
+                                automaticLayout: true,
+                                readOnly: true,
+                                fontFamily: 'Fira Code',
+                                minimap: { enabled: false },
+                                fontSize: 14,
+                                wordWrap: 'on'
+                            });
+                            editors[id] = editor;
+                            setupControls(id);
+                        });
+                        
+                        updateStatus(' Environment Ready!');
+                        resolve();
+                    }, (err) => {
+                        console.error('Monaco Editor failed to load:', err);
+                        reject(new Error('Failed to load Monaco Editor'));
+                    });
+                });
+
+                setTimeout(() => {
+                    document.querySelectorAll('.btn-run').forEach(btn => btn.click());
+                    updateStatus(' Ready !');
+                }, 500);
+            } catch (err) {
+                console.error('Initialization error:', err);
+                updateStatus(` Error: ${err.message}`);
+            }
+        }
+
+        function setupControls(id) {
+            const runBtn = document.getElementById(`btn-run-${id}`);
+            const editBtn = document.getElementById(`btn-edit-${id}`);
+            const editor = editors[id];
+            const outputEl = document.getElementById(`output-${id}`);
+
+            runBtn.addEventListener('click', async () => {
+                if (!pyodide) {
+                    outputEl.textContent = 'Python environment not ready';
+                    outputEl.classList.add('error');
+                    return;
+                }
+
+                outputEl.textContent = 'Running...';
+                outputEl.classList.remove('error');
+                runBtn.disabled = true;
+
+                try {
+                    await pyodide.runPythonAsync(`
+import sys
+print_output = ""
+def capture_print(*args, **kwargs):
+    global print_output
+    result = ' '.join(map(str, args)) + '\\n'
+    print_output += result
+sys.stdout.write = capture_print
+                    `);
+
+                    const code = editor.getValue();
+                    await pyodide.runPythonAsync(code);
+                    const result = await pyodide.runPythonAsync('print_output');
+                    outputEl.textContent = result || 'Execution finished with no output.';
+                } catch (err) {
+                    outputEl.textContent = `Error: ${err.message}`;
+                    outputEl.classList.add('error');
+                } finally {
+                    runBtn.disabled = false;
+                }
+            });
+
+            editBtn.addEventListener('click', () => {
+                const isReadOnly = editor.getOptions().get(monaco.editor.EditorOption.readOnly);
+                editor.updateOptions({ readOnly: !isReadOnly });
+                editBtn.textContent = isReadOnly ? 'Save' : 'Edit';
+                if (isReadOnly) editor.focus();
+            });
+        }
+
+        window.print_output = (text) => {};
+
+        main().catch(err => {
+            console.error('Main function error:', err);
+            updateStatus(`Fatal error: ${err.message}`);
+        });
+    </script>
+</body>
+</html>
