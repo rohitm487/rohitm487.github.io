@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quantum Gates — Interactive Visual Guide | Rohit Kumar Mishra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── THEME VARIABLES (mirroring rohitm487.github.io) ── */
+:root {
+  --bg:          #0d1117;
+  --bg2:         #161b22;
+  --bg3:         #21262d;
+  --border:      #30363d;
+  --text:        #e6edf3;
+  --text2:       #8b949e;
+  --text3:       #6e7681;
+  --accent:      #58a6ff;
+  --accent-dim:  rgba(88,166,255,0.12);
+  --accent2:     #3fb950;
+  --code-bg:     #161b22;
+  --inline-bg:   #1f2428;
+  --tag-bg:      #21262d;
+  --shadow:      0 1px 3px rgba(0,0,0,0.4);
+}
+[data-theme="light"] {
+  --bg:          #ffffff;
+  --bg2:         #f6f8fa;
+  --bg3:         #eaeef2;
+  --border:      #d0d7de;
+  --text:        #1f2328;
+  --text2:       #656d76;
+  --text3:       #9198a1;
+  --accent:      #0969da;
+  --accent-dim:  rgba(9,105,218,0.08);
+  --code-bg:     #f6f8fa;
+  --inline-bg:   #eef1f5;
+  --tag-bg:      #eaf5ff;
+  --shadow:      0 1px 3px rgba(0,0,0,0.12);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  transition: background .2s, color .2s;
+}
+
+/* ── HEADER / NAV ── */
+.site-header {
+  position: sticky; top: 0; z-index: 200;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+}
+.site-header-inner {
+  max-width: 900px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+}
+.site-logo {
+  font-size: 15px; font-weight: 600;
+  color: var(--text); text-decoration: none;
+  display: flex; align-items: center; gap: 8px;
+}
+.site-logo img {
+  width: 28px; height: 28px; border-radius: 50%;
+  object-fit: cover;
+}
+.site-logo span { color: var(--text2); font-weight: 400; }
+
+.header-right { display: flex; align-items: center; gap: 12px; }
+.back-link {
+  font-size: 13px; color: var(--text2); text-decoration: none;
+  display: flex; align-items: center; gap: 4px;
+  transition: color .15s;
+}
+.back-link:hover { color: var(--accent); }
+
+.theme-btn {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 6px; padding: 5px 10px;
+  font-size: 13px; color: var(--text2); cursor: pointer;
+  transition: all .15s; font-family: inherit;
+}
+.theme-btn:hover { color: var(--text); border-color: var(--accent); }
+
+/* ── ARTICLE LAYOUT ── */
+.article-wrap { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+
+.article-meta {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.article-tag {
+  display: inline-block;
+  background: var(--tag-bg); color: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 2px 10px;
+  font-size: 12px; font-weight: 500;
+  margin-bottom: 12px;
+}
+.article-title {
+  font-size: 32px; font-weight: 700; line-height: 1.25;
+  color: var(--text); margin-bottom: 12px; letter-spacing: -0.02em;
+}
+.article-subtitle {
+  font-size: 17px; color: var(--text2); line-height: 1.6;
+  margin-bottom: 16px;
+}
+.article-byline {
+  font-size: 13px; color: var(--text3);
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
+.article-byline a { color: var(--accent); text-decoration: none; }
+.dot { color: var(--text3); }
+
+/* ── CONTENT TYPOGRAPHY ── */
+.article-body h2 {
+  font-size: 22px; font-weight: 600; color: var(--text);
+  margin: 40px 0 14px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  letter-spacing: -0.01em;
+}
+.article-body h3 {
+  font-size: 17px; font-weight: 600; color: var(--text);
+  margin: 28px 0 10px;
+}
+.article-body p {
+  margin-bottom: 16px; color: var(--text2); line-height: 1.75;
+}
+.article-body p strong { color: var(--text); }
+.article-body a { color: var(--accent); text-decoration: none; }
+.article-body a:hover { text-decoration: underline; }
+
+.article-body ul, .article-body ol {
+  margin: 12px 0 16px 24px;
+}
+.article-body li {
+  margin-bottom: 6px; color: var(--text2); line-height: 1.7;
+}
+.article-body li strong { color: var(--text); }
+
+code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 13px;
+  background: var(--inline-bg);
+  padding: 2px 6px; border-radius: 4px;
+  color: var(--accent);
+}
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px 20px;
+  overflow-x: auto;
+  margin: 18px 0;
+}
+pre code {
+  background: none; padding: 0;
+  font-size: 13px; color: var(--text);
+  line-height: 1.65;
+}
+
+/* ── CALLOUT BOXES ── */
+.callout {
+  border-left: 3px solid var(--accent);
+  background: var(--accent-dim);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin: 20px 0;
+}
+.callout p { margin: 0; color: var(--text2); font-size: 14px; line-height: 1.65; }
+.callout strong { color: var(--accent); }
+.callout-green { border-color: var(--accent2); background: rgba(63,185,80,0.08); }
+.callout-green p, .callout-green strong { color: var(--accent2); }
+.callout-green p { color: var(--text2); }
+
+/* ── GATE SELECTOR TABS ── */
+.gate-nav {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin: 20px 0 24px;
+}
+.gate-tab {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 6px; padding: 6px 14px;
+  font-size: 13px; font-family: 'JetBrains Mono', monospace;
+  color: var(--text2); cursor: pointer; transition: all .15s;
+}
+.gate-tab:hover { color: var(--text); border-color: var(--accent); }
+.gate-tab.active {
+  background: var(--accent-dim); color: var(--accent);
+  border-color: var(--accent); font-weight: 600;
+}
+.gate-tab .sub { font-size: 10px; display: block; font-family: 'Inter', sans-serif; margin-top: 1px; color: var(--text3); }
+.gate-tab.active .sub { color: var(--accent); opacity: .75; }
+
+/* ── VISUALIZER PANEL ── */
+.vis-panel {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 24px 0;
+}
+.vis-panel-header {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 8px;
+}
+.vis-panel-header .gate-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px; font-weight: 700; color: var(--accent);
+}
+.vis-panel-header .gate-full { font-size: 13px; color: var(--text2); }
+.vis-panel-body { padding: 20px; }
+
+.vis-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+@media (max-width: 640px) { .vis-grid { grid-template-columns: 1fr; } }
+
+.vis-box {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px;
+}
+.vis-box-label {
+  font-size: 10px; font-weight: 600; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--text3);
+  margin-bottom: 10px; font-family: 'JetBrains Mono', monospace;
+}
+canvas { display: block; }
+
+.bloch-state {
+  text-align: center; margin-top: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; color: var(--accent);
+}
+
+/* probability bars */
+.prob-bar-wrap { margin-top: 10px; }
+.prob-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.prob-lbl { font-family: 'JetBrains Mono', monospace; font-size: 12px; min-width: 30px; color: var(--text2); }
+.prob-track { flex: 1; height: 5px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+.prob-fill { height: 100%; border-radius: 3px; transition: width .4s cubic-bezier(.4,0,.2,1); }
+.prob-pct { font-family: 'JetBrains Mono', monospace; font-size: 11px; min-width: 34px; text-align: right; }
+
+/* controls */
+.ctrl-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.ctrl-btn {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 6px; padding: 6px 14px;
+  font-size: 12px; font-family: 'JetBrains Mono', monospace;
+  color: var(--text2); cursor: pointer; transition: all .15s;
+}
+.ctrl-btn:hover { color: var(--text); border-color: var(--accent); }
+.ctrl-btn.primary {
+  background: var(--accent); color: #fff; border-color: var(--accent);
+  font-weight: 600;
+}
+.ctrl-btn.primary:hover { opacity: .88; }
+.ctrl-btn.active { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
+
+.slider-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+.slider-row label { font-size: 12px; font-family: 'JetBrains Mono', monospace; color: var(--text2); min-width: 18px; }
+.slider-row input[type=range] {
+  flex: 1; appearance: none; height: 4px;
+  background: var(--border); border-radius: 2px; cursor: pointer;
+}
+.slider-row input[type=range]::-webkit-slider-thumb {
+  appearance: none; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--accent); border: 2px solid var(--bg);
+}
+.slider-row .val { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); min-width: 38px; text-align: right; }
+
+/* wave canvas wrapper */
+.wave-wrap { margin-top: 12px; }
+.wave-label { font-size: 10px; color: var(--text3); font-family: 'JetBrains Mono', monospace; margin-bottom: 6px; }
+
+/* entanglement alert */
+.entangle-box {
+  background: rgba(167,139,250,0.08);
+  border: 1px solid rgba(167,139,250,0.3);
+  border-radius: 8px; padding: 14px 16px;
+  margin-top: 12px; font-size: 13px; line-height: 1.6; color: var(--text2);
+}
+.entangle-box strong { display: block; font-size: 11px; font-family: 'JetBrains Mono', monospace; letter-spacing: .07em; color: #a78bfa; margin-bottom: 5px; }
+.bell-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-top: 10px; }
+.bell-cell {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 6px; padding: 8px 4px; text-align: center;
+}
+.bell-cell .ket { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #a78bfa; }
+.bell-cell .pct { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+/* qubit circuit lines */
+.qubit-circuit { margin: 12px 0; }
+
+/* ── GATE REFERENCE TABLE ── */
+.gate-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+.gate-table th {
+  text-align: left; padding: 8px 12px;
+  background: var(--bg2); border-bottom: 2px solid var(--border);
+  font-size: 12px; font-weight: 600; color: var(--text2);
+  font-family: 'JetBrains Mono', monospace; letter-spacing: .05em;
+}
+.gate-table td {
+  padding: 10px 12px; border-bottom: 1px solid var(--border);
+  color: var(--text2); vertical-align: top;
+}
+.gate-table tr:last-child td { border-bottom: none; }
+.gate-table code { font-size: 12px; }
+.gate-table .axis { color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+
+/* ── FOOTER ── */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 24px;
+  text-align: center;
+  font-size: 13px; color: var(--text3);
+}
+.site-footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="site-header">
+  <div class="site-header-inner">
+    <a href="https://rohitm487.github.io/" class="site-logo">
+      <img src="https://avatars.githubusercontent.com/u/30938155?v=4" alt="Rohit">
+      Rohit Kumar Mishra <span>/ Articles</span>
+    </a>
+    <div class="header-right">
+      <a href="https://rohitm487.github.io/#articles" class="back-link">← Back</a>
+      <button class="theme-btn" onclick="toggleTheme()">Toggle Theme</button>
+    </div>
+  </div>
+</header>
+
+<!-- ── ARTICLE ── -->
+<main class="article-wrap">
+
+  <!-- META -->
+  <div class="article-meta">
+    <span class="article-tag">Quantum Computing</span>
+    <h1 class="article-title">Quantum Gates — An Interactive Visual Guide</h1>
+    <p class="article-subtitle">
+      What does "rotating a qubit" actually mean? What does CNOT do to two qubits in superposition?
+      This guide builds intuition for every standard gate through live Bloch sphere animations, wave analogies, and hands-on controls.
+    </p>
+    <div class="article-byline">
+      <span>Rohit Kumar Mishra</span>
+      <span class="dot">·</span>
+      <span>2025</span>
+      <span class="dot">·</span>
+      <span>12 min read</span>
+      <span class="dot">·</span>
+      <a href="https://rohitm487.github.io/#articles">All Articles</a>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="article-body">
+
+    <h2>🤔 The Problem with Quantum Gate Notation</h2>
+    <p>
+      If you've read any quantum computing textbook you've encountered gates written as matrices — <code>H</code>, <code>X</code>, <code>CNOT</code>.
+      The matrix is precise, but it gives you no feel for <em>what the gate physically does</em> to a qubit.
+      Why does <code>H</code> create superposition? Why does <code>Z</code> leave measurement probabilities unchanged? What does "entanglement" from <code>CNOT</code> actually look like?
+    </p>
+    <p>
+      This article answers those questions using three parallel views for every gate: the <strong>Bloch sphere</strong> (geometric rotation), the <strong>wave amplitude</strong> (probability amplitudes as waves), and <strong>interactive controls</strong> so you can see the state change in real time.
+    </p>
+
+    <div class="callout">
+      <p><strong>Mental model first:</strong> A qubit isn't just 0 or 1. It's a unit vector pointing somewhere on a sphere. A quantum gate is a <strong>rotation</strong> of that vector. That's it. Everything else follows from this.</p>
+    </div>
+
+    <h2>🌐 The Bloch Sphere — Reading the Map</h2>
+    <p>
+      The Bloch sphere is the standard geometric picture for a single qubit. The north pole is <code>|0⟩</code>, the south pole is <code>|1⟩</code>, and every point on the surface is a valid quantum state.
+    </p>
+    <ul>
+      <li><strong>On the poles</strong> — definite states: measuring always gives 0 or 1.</li>
+      <li><strong>On the equator</strong> — equal superposition: 50% chance of 0 or 1.</li>
+      <li><strong>Between poles and equator</strong> — biased superposition: unequal probabilities.</li>
+      <li><strong>Different points on the equator</strong> — same probabilities, different <em>phase</em>. Phase is the hidden variable that drives quantum interference.</li>
+    </ul>
+    <p>
+      Every gate below is shown as an arrow on this sphere. Watch the arrow move when you apply the gate.
+    </p>
+
+    <!-- ═══ INTERACTIVE EXPLORER ═══ -->
+    <h2>⚛️ Interactive Gate Explorer</h2>
+    <p>Select a gate, manipulate the qubit state, and apply the gate to see exactly what changes — on the Bloch sphere, in the wave, and in the probability readout.</p>
+
+    <div class="gate-nav" id="gate-nav"></div>
+
+    <div class="vis-panel" id="vis-panel">
+      <!-- rendered by JS -->
+    </div>
+    <!-- ═══════════════════════════ -->
+
+    <h2>📋 Gate Reference Table</h2>
+    <p>All standard gates at a glance — what axis they rotate around, by how much, and what that means.</p>
+
+    <table class="gate-table">
+      <thead>
+        <tr>
+          <th>Gate</th>
+          <th>Type</th>
+          <th>Axis</th>
+          <th>Angle</th>
+          <th>Effect</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><code>H</code></td><td>Single</td><td class="axis">X+Z</td><td>180°</td><td>|0⟩ → equal superposition |+⟩</td></tr>
+        <tr><td><code>X</code></td><td>Single</td><td class="axis">X</td><td>180°</td><td>Bit flip: |0⟩↔|1⟩</td></tr>
+        <tr><td><code>Y</code></td><td>Single</td><td class="axis">Y</td><td>180°</td><td>Bit flip + phase flip (factor of i)</td></tr>
+        <tr><td><code>Z</code></td><td>Single</td><td class="axis">Z</td><td>180°</td><td>Phase flip only; probs unchanged</td></tr>
+        <tr><td><code>S</code></td><td>Single</td><td class="axis">Z</td><td>90°</td><td>Quarter-turn phase rotation</td></tr>
+        <tr><td><code>T</code></td><td>Single</td><td class="axis">Z</td><td>45°</td><td>Eighth-turn phase; universal gate set basis</td></tr>
+        <tr><td><code>Rx(θ)</code></td><td>Param.</td><td class="axis">X</td><td>θ</td><td>Arbitrary rotation; X = Rx(π)</td></tr>
+        <tr><td><code>Ry(θ)</code></td><td>Param.</td><td class="axis">Y</td><td>θ</td><td>Real amplitudes only; sets probability ratio</td></tr>
+        <tr><td><code>Rz(θ)</code></td><td>Param.</td><td class="axis">Z</td><td>θ</td><td>Arbitrary phase rotation; Z/S/T are special cases</td></tr>
+        <tr><td><code>CNOT</code></td><td>2-qubit</td><td class="axis">Cond. X</td><td>180°</td><td>Flips target iff control=|1⟩; creates entanglement</td></tr>
+        <tr><td><code>CZ</code></td><td>2-qubit</td><td class="axis">Cond. Z</td><td>180°</td><td>Phase flip on |11⟩ only; symmetric</td></tr>
+        <tr><td><code>SWAP</code></td><td>2-qubit</td><td class="axis">Exchange</td><td>—</td><td>Exchanges two qubit states completely</td></tr>
+        <tr><td><code>Toffoli</code></td><td>3-qubit</td><td class="axis">CC-X</td><td>180°</td><td>Flips target iff both controls=|1⟩; reversible AND</td></tr>
+      </tbody>
+    </table>
+
+    <h2>🔑 Key Takeaways</h2>
+
+    <h3>1. All single-qubit gates are rotations</h3>
+    <p>
+      This is the central insight. <code>X</code> rotates 180° around the X-axis. <code>Z</code> rotates 180° around the Z-axis. <code>H</code> rotates 180° around the diagonal X+Z axis.
+      Parametric gates like <code>Rx(θ)</code> let you set the angle precisely. <strong>Every unitary operation on a qubit is a rotation of the Bloch sphere.</strong>
+    </p>
+
+    <h3>2. Phase is invisible but not irrelevant</h3>
+    <p>
+      <code>Z</code>, <code>S</code>, and <code>T</code> gates don't change measurement probabilities at all. You can't detect them by measuring a single qubit.
+      But phase differences create interference when qubits interact — which is exactly how quantum algorithms achieve speedup over classical ones.
+    </p>
+
+    <div class="callout callout-green">
+      <p><strong>Wave analogy:</strong> Phase is like the offset of a wave. Two waves with opposite phases cancel (destructive interference). Quantum algorithms engineer interference so wrong answers cancel and correct answers reinforce.</p>
+    </div>
+
+    <h3>3. CNOT + superposition = entanglement</h3>
+    <p>
+      Apply <code>H</code> to a qubit (putting it in superposition), then use it as the control of a <code>CNOT</code>.
+      The result is a <strong>Bell state</strong> — two qubits that share a single quantum state.
+      Measuring one instantly determines the other, regardless of distance.
+    </p>
+    <pre><code># The simplest entanglement circuit
+|0⟩ ── H ── ●──── (control: |+⟩ = superposition)
+             |
+|0⟩ ─────── ⊕──── (target: flips with control → Bell state)</code></pre>
+    <p>
+      After this circuit: state = (|00⟩ + |11⟩) / √2.
+      You cannot describe each qubit independently anymore.
+    </p>
+
+    <h3>4. T + H + CNOT = universal</h3>
+    <p>
+      Any quantum computation can be approximated arbitrarily well using only three gates: <code>T</code>, <code>H</code>, and <code>CNOT</code>.
+      This is called a <strong>universal gate set</strong> — the quantum equivalent of NAND universality in classical computing.
+    </p>
+
+    <h3>5. Toffoli makes quantum computers classically universal</h3>
+    <p>
+      The Toffoli gate (CCX) is a reversible AND gate. Combined with NOT (X gate), it can simulate any classical Boolean circuit.
+      This means quantum computers are strictly more powerful than classical ones — they contain classical computing as a special case.
+    </p>
+
+    <h2>📚 Further Reading</h2>
+    <ul>
+      <li><a href="https://qiskit.org/learn" target="_blank">Qiskit Learning — IBM's quantum computing course</a></li>
+      <li><a href="https://quantumcomputing.stackexchange.com/" target="_blank">Quantum Computing Stack Exchange</a></li>
+      <li><a href="https://quantum.country/" target="_blank">Quantum Country — spaced-repetition quantum textbook</a></li>
+    </ul>
+
+  </div><!-- /article-body -->
+</main>
+
+<footer class="site-footer">
+  Built with ♥ by <a href="https://github.com/rohitm487">Rohit Kumar Mishra</a> | Hosted on GitHub Pages
+</footer>
+
+<!-- ═══════════════ INTERACTIVE LOGIC ═══════════════ -->
+<script>
+const TAU = Math.PI * 2;
+
+/* ── GATE DATA ── */
+const GATES = [
+  {
+    id:'H', label:'H', sub:'hadamard', name:'Hadamard Gate',
+    axis:'X+Z', angle:180, type:'single',
+    desc:'Takes any definite state and creates a perfect 50/50 superposition. The most important quantum gate.',
+    intuition:'Like spinning a coin — while spinning it\'s neither heads nor tails. H puts the qubit in that spinning state.',
+    wave:'Two equal-amplitude components coexist: one for |0⟩ and one for |1⟩. Both are simultaneously real.',
+    matrix:'⎡ 1/√2   1/√2 ⎤\n⎣ 1/√2  -1/√2 ⎦',
+    color:'#58a6ff',
+    apply:(t,p)=>t<0.12?[Math.PI/2,0]:Math.abs(t-Math.PI)<0.12?[Math.PI/2,Math.PI]:[Math.PI/2,p]
+  },
+  {
+    id:'X', label:'X', sub:'pauli-x / NOT', name:'Pauli-X Gate',
+    axis:'X', angle:180, type:'single',
+    desc:'The quantum NOT gate. Flips |0⟩ to |1⟩ and vice versa. 180° rotation around the X-axis.',
+    intuition:'Flipping a light switch. The north pole moves to the south pole via the equator.',
+    wave:'The wave amplitude flips sign — crest becomes trough. Probability switches 100% between |0⟩ and |1⟩.',
+    matrix:'⎡ 0  1 ⎤\n⎣ 1  0 ⎦',
+    color:'#f87171',
+    apply:(t,p)=>[Math.PI-t, p+Math.PI]
+  },
+  {
+    id:'Y', label:'Y', sub:'pauli-y', name:'Pauli-Y Gate',
+    axis:'Y', angle:180, type:'single',
+    desc:'180° rotation around the Y-axis. Combines bit flip AND phase flip. The complex factor i gives the qubit a twist.',
+    intuition:'Like X-gate but through a mirror that warps the phase. The result is flipped both in state and in direction.',
+    wave:'Wave flips AND gains a 90° imaginary phase shift. Both real and imaginary parts of the amplitude are affected.',
+    matrix:'⎡ 0  -i ⎤\n⎣ i   0 ⎦',
+    color:'#a78bfa',
+    apply:(t,p)=>[Math.PI-t, Math.PI-p]
+  },
+  {
+    id:'Z', label:'Z', sub:'phase flip', name:'Pauli-Z Gate',
+    axis:'Z', angle:180, type:'single',
+    desc:'Rotates 180° around the Z-axis. Phase flips the |1⟩ component (×-1) but leaves measurement probabilities identical.',
+    intuition:'The qubit looks the same from outside but is "upside-down" inside. Like inverting a wave — invisible until it interferes with another.',
+    wave:'The |1⟩ wave component flips sign. |0⟩ wave unchanged. No probability change — only phase. Critical for quantum interference.',
+    matrix:'⎡ 1   0 ⎤\n⎣ 0  -1 ⎦',
+    color:'#3fb950',
+    apply:(t,p)=>[t, p+Math.PI]
+  },
+  {
+    id:'S', label:'S', sub:'90° phase', name:'S Gate',
+    axis:'Z', angle:90, type:'single',
+    desc:'Rotates phase by 90° (π/2). Half of the Z gate. |0⟩ unchanged; |1⟩ gains factor of i.',
+    intuition:'If Z spins the phase dial by half a turn, S spins it a quarter turn. Two S gates = one Z gate.',
+    wave:'The |1⟩ wave shifts forward by one quarter of a full cycle. The |0⟩ wave is completely untouched.',
+    matrix:'⎡ 1  0 ⎤\n⎣ 0  i ⎦',
+    color:'#38bdf8',
+    apply:(t,p)=>[t, p+Math.PI/2]
+  },
+  {
+    id:'T', label:'T', sub:'45° phase', name:'T Gate (π/8)',
+    axis:'Z', angle:45, type:'single',
+    desc:'Rotates phase by 45° (π/4). Half of S gate. The finest standard phase step. T + H + CNOT = universal quantum computing.',
+    intuition:'A tiny precise phase nudge. Alone it\'s subtle, but stacked with H gates it can approximate any quantum operation.',
+    wave:'The |1⟩ wave shifts by one eighth of a full cycle — 45°. Combine enough T and H gates and you can build any algorithm.',
+    matrix:'⎡ 1    0      ⎤\n⎣ 0  e^(iπ/4) ⎦',
+    color:'#fbbf24',
+    apply:(t,p)=>[t, p+Math.PI/4]
+  },
+  {
+    id:'Rx', label:'Rₓ(θ)', sub:'x-rotation', name:'Rx Gate',
+    axis:'X', angle:null, type:'param',
+    desc:'Rotates by any angle θ around the X-axis. X gate is Rx(π). Control the exact amount of rotation — partial bit flips, biased superpositions.',
+    intuition:'Instead of flipping the coin all the way (X), Rx lets you tilt it by any amount. At θ=π/2 you reach equal superposition.',
+    wave:'Amplitude gradually shifts from |0⟩ to |1⟩ as θ increases. At θ=π fully flipped; at θ=π/2 equal superposition.',
+    matrix:'⎡  cos(θ/2)  -i·sin(θ/2) ⎤\n⎣ -i·sin(θ/2)  cos(θ/2)  ⎦',
+    color:'#fb923c',
+    apply:(t,p,a)=>[t+a,p]
+  },
+  {
+    id:'Ry', label:'Rᵧ(θ)', sub:'y-rotation', name:'Ry Gate',
+    axis:'Y', angle:null, type:'param',
+    desc:'Rotates by any angle θ around the Y-axis. Only real matrix entries — no complex phase. Sets the latitude of the Bloch sphere.',
+    intuition:'Ry sets how far north or south your qubit sits. θ=0 → north (|0⟩). θ=π → south (|1⟩). θ=π/2 → equator (equal superposition).',
+    wave:'Pure real amplitude mixing — no phase effect. The probability ratio between |0⟩ and |1⟩ smoothly changes with θ.',
+    matrix:'⎡ cos(θ/2)  -sin(θ/2) ⎤\n⎣ sin(θ/2)   cos(θ/2) ⎦',
+    color:'#e879f9',
+    apply:(t,p,a)=>[t+a,p]
+  },
+  {
+    id:'Rz', label:'R_z(θ)', sub:'z-rotation', name:'Rz Gate',
+    axis:'Z', angle:null, type:'param',
+    desc:'Rotates by any angle θ around the Z-axis. Pure phase rotation — never changes probabilities. Z, S, T are all special cases of Rz.',
+    intuition:'The master phase knob. Spin the qubit\'s internal phase dial by any amount. Invisible alone but decisive during interference.',
+    wave:'The |1⟩ wave phase shifts smoothly by θ. At θ=2π you do a full rotation returning to start — except for a global phase factor of -1.',
+    matrix:'⎡ e^(-iθ/2)    0      ⎤\n⎣    0      e^(iθ/2) ⎦',
+    color:'#4ade80',
+    apply:(t,p,a)=>[t,p+a]
+  },
+  {
+    id:'CNOT', label:'CNOT', sub:'entanglement', name:'CNOT Gate',
+    axis:'Cond. X', angle:180, type:'cnot',
+    desc:'Two-qubit gate: flips target iff control=|1⟩. When control is in superposition, both possibilities coexist → entanglement.',
+    intuition:'A conditional light switch. Classical: on/off depending on first switch. Quantum: if first is in superposition, both outcomes exist simultaneously.',
+    wave:'Two qubit waves become one joint wave over 4 states (|00⟩,|01⟩,|10⟩,|11⟩). After entanglement they cannot be described independently.',
+    matrix:'⎡ 1 0 0 0 ⎤\n⎢ 0 1 0 0 ⎥\n⎢ 0 0 0 1 ⎥\n⎣ 0 0 1 0 ⎦',
+    color:'#a78bfa'
+  },
+  {
+    id:'CZ', label:'CZ', sub:'2-qubit phase', name:'CZ Gate',
+    axis:'Cond. Z', angle:180, type:'cz',
+    desc:'Phase-flips the |11⟩ state only. Symmetric: swapping control and target gives the same result. Implemented natively in many superconducting quantum computers.',
+    intuition:'Two qubits "feel" each other\'s phase only when both are |1⟩. Entanglement through phase rather than amplitude.',
+    wave:'Only the |11⟩ wave component gains a factor of -1. The other three basis states are completely untouched.',
+    matrix:'⎡ 1 0 0  0 ⎤\n⎢ 0 1 0  0 ⎥\n⎢ 0 0 1  0 ⎥\n⎣ 0 0 0 -1 ⎦',
+    color:'#3fb950'
+  },
+  {
+    id:'SWAP', label:'SWAP', sub:'qubit exchange', name:'SWAP Gate',
+    axis:'Exchange', angle:null, type:'swap',
+    desc:'Exchanges the complete quantum states of two qubits. |01⟩↔|10⟩, |00⟩ and |11⟩ unchanged. Essential for routing qubit states on limited-connectivity hardware.',
+    intuition:'Like swapping two glasses — the contents move completely. Whatever state qubit A had, qubit B now has, and vice versa.',
+    wave:'The two qubit waves trade places. No entanglement created — it\'s pure transposition. Equivalent to three consecutive CNOTs.',
+    matrix:'⎡ 1 0 0 0 ⎤\n⎢ 0 0 1 0 ⎥\n⎢ 0 1 0 0 ⎥\n⎣ 0 0 0 1 ⎦',
+    color:'#38bdf8'
+  },
+  {
+    id:'Toffoli', label:'CCX', sub:'toffoli / 3-qubit', name:'Toffoli Gate',
+    axis:'CC-X', angle:180, type:'toffoli',
+    desc:'Three-qubit gate: flips target iff BOTH controls=|1⟩. Implements a reversible AND gate. With ancilla bits, can simulate any classical Boolean circuit.',
+    intuition:'Two guards who must both say YES before the door opens. In superposition this creates 3-way entanglement — all possibilities coexist.',
+    wave:'Joint wave over 8 basis states. Only |110⟩↔|111⟩ swap. All six other states unchanged.',
+    matrix:'8×8 on |000⟩...|111⟩\nFlips target iff C1=C2=|1⟩',
+    color:'#fbbf24'
+  }
+];
+
+/* ── STATE ── */
+let gId = 'H', theta = 0, phi = 0, paramAngle = 90;
+let ctrl = 0, tgt = 0, ctrl2 = 0, tgt2 = 0, tofC1 = 0, tofC2 = 0, tofT = 0;
+let rafId = null, wPhase = 0;
+
+/* ── THEME ── */
+function toggleTheme() {
+  const t = document.documentElement.getAttribute('data-theme');
+  document.documentElement.setAttribute('data-theme', t === 'dark' ? 'light' : 'dark');
+}
+
+/* ── HELPERS ── */
+function mod(x,m){return((x%m)+m)%m;}
+function probs(t){const p0=Math.cos(t/2)**2;return{p0:Math.round(p0*100),p1:Math.round((1-p0)*100)};}
+function stateStr(t){
+  if(t<0.1)return'|0⟩';
+  if(Math.abs(t-Math.PI)<0.1)return'|1⟩';
+  const {p0}=probs(t);
+  if(p0===50)return'|+⟩ (equal superposition)';
+  return`|ψ⟩ ${p0}% |0⟩, ${100-p0}% |1⟩`;
+}
+function isDark(){return document.documentElement.getAttribute('data-theme')==='dark';}
+
+/* ── BLOCH DRAW ── */
+function drawBloch(id, t, p, col) {
+  const cv=document.getElementById(id); if(!cv)return;
+  const ctx=cv.getContext('2d'), W=cv.width, H=cv.height, cx=W/2, cy=H/2, R=Math.min(W,H)*0.37;
+  ctx.clearRect(0,0,W,H);
+  const dk=isDark();
+  const gc='rgba(100,170,255,0.1)', axc='rgba(120,180,255,0.32)', txc=dk?'rgba(160,200,240,0.85)':'rgba(30,50,80,0.8)';
+  ctx.beginPath();ctx.arc(cx,cy,R,0,TAU);ctx.strokeStyle=gc;ctx.lineWidth=1.5;ctx.stroke();
+  ctx.beginPath();ctx.ellipse(cx,cy,R,R*0.32,0,0,TAU);ctx.strokeStyle=gc;ctx.lineWidth=1;ctx.setLineDash([4,4]);ctx.stroke();ctx.setLineDash([]);
+  ctx.beginPath();ctx.ellipse(cx,cy,R*0.45,R,0,0,TAU);ctx.strokeStyle=gc;ctx.lineWidth=1;ctx.setLineDash([4,4]);ctx.stroke();ctx.setLineDash([]);
+  function ax(dx,dy,lbl){
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+dx*R*1.14,cy+dy*R*1.14);
+    ctx.strokeStyle=axc;ctx.lineWidth=1;ctx.stroke();
+    ctx.fillStyle=txc;ctx.font='10px "JetBrains Mono",monospace';ctx.fillText(lbl,cx+dx*R*1.22-4,cy+dy*R*1.22+4);
+  }
+  ax(0,-1,'|0⟩');ax(0,1,'|1⟩');ax(0.85,-0.15,'x');ax(-0.75,0.25,'-y');
+  const bx=Math.sin(t)*Math.cos(p), by=Math.sin(t)*Math.sin(p), bz=Math.cos(t);
+  const vx=cx+R*(bx*0.72-by*0.45), vy=cy+R*(-bz+by*0.22);
+  const sx=cx+R*(bx*0.72-by*0.45), sy=cy+R*(by*0.22);
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(sx,sy);
+  ctx.strokeStyle='rgba(100,170,255,0.14)';ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(vx,vy);
+  ctx.strokeStyle='rgba(100,170,255,0.14)';ctx.lineWidth=1;ctx.stroke();ctx.setLineDash([]);
+  const grd=ctx.createRadialGradient(vx,vy,0,vx,vy,18);
+  grd.addColorStop(0,col+'40');grd.addColorStop(1,'transparent');
+  ctx.beginPath();ctx.arc(vx,vy,18,0,TAU);ctx.fillStyle=grd;ctx.fill();
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(vx,vy);
+  ctx.strokeStyle=col;ctx.lineWidth=2.5;ctx.shadowColor=col;ctx.shadowBlur=5;ctx.stroke();ctx.shadowBlur=0;
+  const ang=Math.atan2(vy-cy,vx-cx);
+  ctx.beginPath();ctx.moveTo(vx,vy);
+  ctx.lineTo(vx-9*Math.cos(ang-.4),vy-9*Math.sin(ang-.4));
+  ctx.lineTo(vx-9*Math.cos(ang+.4),vy-9*Math.sin(ang+.4));
+  ctx.closePath();ctx.fillStyle=col;ctx.fill();
+  ctx.beginPath();ctx.arc(vx,vy,4,0,TAU);ctx.fillStyle=col;ctx.fill();
+  ctx.beginPath();ctx.arc(cx,cy,3,0,TAU);ctx.fillStyle='rgba(120,180,255,0.45)';ctx.fill();
+}
+
+/* ── WAVE DRAW ── */
+function drawWave(id, gateId, phase, ph, ang) {
+  const cv=document.getElementById(id); if(!cv)return;
+  const ctx=cv.getContext('2d'), W=cv.width, H=cv.height;
+  ctx.clearRect(0,0,W,H);
+  const dk=isDark();
+  const gc='rgba(100,170,255,0.07)', mc='rgba(120,180,200,0.28)';
+  ctx.beginPath();ctx.moveTo(0,H/2);ctx.lineTo(W,H/2);ctx.strokeStyle=gc;ctx.lineWidth=1;ctx.stroke();
+  function sine(amp,ph2,col,lw,dash){
+    ctx.beginPath();
+    for(let x=0;x<=W;x++){const y=H/2-amp*Math.sin((x/W)*TAU*2.5+ph2);x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+    ctx.strokeStyle=col;ctx.lineWidth=lw;
+    if(dash)ctx.setLineDash(dash);else ctx.setLineDash([]);ctx.stroke();ctx.setLineDash([]);
+  }
+  const g=GATES.find(x=>x.id===gateId), col=g?g.color:'#58a6ff';
+  if(gateId==='H'){sine(16,phase,col,2);sine(16,phase+Math.PI,mc,2,[5,4]);}
+  else if(gateId==='X'||gateId==='Y'){sine(20,phase+Math.PI,col,2.5);sine(20,phase,mc,1.5,[4,4]);}
+  else if(gateId==='Z'){sine(18,phase+Math.PI,col,2.5);sine(18,phase,mc,1.5,[4,4]);}
+  else if(gateId==='S'){sine(18,phase+Math.PI/2,col,2.5);sine(18,phase,mc,1.5,[4,4]);}
+  else if(gateId==='T'){sine(18,phase+Math.PI/4,col,2.5);sine(18,phase,mc,1.5,[4,4]);}
+  else if(gateId==='Rx'){const a=ang*Math.PI/180;sine(Math.max(2,Math.cos(a/2)*20),phase,col,2);sine(Math.max(2,Math.sin(a/2)*20),phase+Math.PI,mc,2,[4,4]);}
+  else if(gateId==='Ry'){const a=ang*Math.PI/180;sine(Math.max(2,Math.cos(a/2)*20),phase,col,2);sine(Math.max(2,Math.sin(a/2)*20),phase,mc,2,[4,4]);}
+  else if(gateId==='Rz'){sine(18,phase,col,2);sine(18,phase+(ang*Math.PI/180),mc,1.5,[4,4]);}
+  else{sine(14,phase,col,2);sine(10,phase*1.3+1,col+'66',1.5);}
+  const txc=dk?'rgba(160,200,240,0.6)':'rgba(30,50,80,0.55)';
+  ctx.fillStyle=txc;ctx.font='9px "JetBrains Mono",monospace';
+  ctx.fillText('|0⟩ amplitude',4,12);ctx.fillText('|1⟩ amplitude',4,H-5);
+}
+
+/* ── CIRCUIT DRAW ── */
+function drawCircuit(id, gObj) {
+  const cv=document.getElementById(id); if(!cv)return;
+  const ctx=cv.getContext('2d'), W=cv.width, H=cv.height;
+  ctx.clearRect(0,0,W,H);
+  const dk=isDark();
+  const wc=dk?'rgba(100,170,255,0.22)':'rgba(30,100,200,0.2)';
+  const tc=dk?'rgba(160,200,240,0.85)':'rgba(20,40,80,0.85)';
+  const col=gObj.color;
+  ctx.font='11px "JetBrains Mono",monospace';
+
+  function wire(y){ctx.beginPath();ctx.moveTo(18,y);ctx.lineTo(W-18,y);ctx.strokeStyle=wc;ctx.lineWidth=1.5;ctx.stroke();}
+  function label(txt,x,y,c){ctx.fillStyle=c||tc;ctx.fillText(txt,x,y);}
+  function ctrlDot(x,y){ctx.beginPath();ctx.arc(x,y,5,0,TAU);ctx.fillStyle=col;ctx.fill();}
+  function notSymbol(x,y){
+    ctx.beginPath();ctx.arc(x,y,11,0,TAU);ctx.strokeStyle=col;ctx.lineWidth=2;ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x-11,y);ctx.lineTo(x+11,y);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x,y-11);ctx.lineTo(x,y+11);ctx.stroke();
+  }
+  function vert(x,y1,y2){ctx.beginPath();ctx.moveTo(x,y1);ctx.lineTo(x,y2);ctx.strokeStyle=col;ctx.lineWidth=2;ctx.stroke();}
+  function xSymbol(x,y){
+    const d=9;
+    ctx.beginPath();ctx.moveTo(x-d,y-d);ctx.lineTo(x+d,y+d);ctx.strokeStyle=col;ctx.lineWidth=2.5;ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x+d,y-d);ctx.lineTo(x-d,y+d);ctx.stroke();
+  }
+
+  const gx=W*0.54;
+  if(gObj.type==='cnot'){
+    const y1=H*0.33, y2=H*0.67;
+    wire(y1);wire(y2);
+    const cl=ctrl===2?'|+⟩':`|${ctrl}⟩`;
+    label(`ctrl: ${cl}`,20,y1+4); label(`tgt:  |${tgt}⟩`,20,y2+4);
+    ctrlDot(gx,y1); vert(gx,y1+5,y2-11); notSymbol(gx,y2);
+    const to=ctrl===1?(tgt===0?1:0):tgt;
+    label(`|${ctrl===2?'+':ctrl}⟩`,W-44,y1+4); label(`|${to}⟩`,W-44,y2+4);
+  } else if(gObj.type==='cz'){
+    const y1=H*0.33, y2=H*0.67;
+    wire(y1);wire(y2);
+    label(`A: |${ctrl2===2?'+':ctrl2}⟩`,20,y1+4);label(`B: |${tgt2}⟩`,20,y2+4);
+    ctrlDot(gx,y1);vert(gx,y1+5,y2-5);ctrlDot(gx,y2);
+    const phFlip=ctrl2===1&&tgt2===1;
+    label(`|${ctrl2===2?'+':ctrl2}⟩`,W-58,y1+4);
+    label(`|${tgt2}⟩${phFlip?' ×(-1)':''}`,W-70,y2+4);
+  } else if(gObj.type==='swap'){
+    const y1=H*0.33,y2=H*0.67;
+    wire(y1);wire(y2);
+    const al=ctrl===2?'|+⟩':`|${ctrl}⟩`;
+    label(`A: ${al}`,20,y1+4);label(`B: |${tgt}⟩`,20,y2+4);
+    xSymbol(gx,y1);xSymbol(gx,y2);vert(gx,y1+9,y2-9);
+    const ao=tgt, bo=ctrl===2?'+':ctrl;
+    label(`A: |${ao}⟩`,W-52,y1+4);label(`B: |${bo}⟩`,W-52,y2+4);
+  } else if(gObj.type==='toffoli'){
+    const y1=H*0.2,y2=H*0.5,y3=H*0.8;
+    wire(y1);wire(y2);wire(y3);
+    label(`C1:|${tofC1}⟩`,18,y1+4);label(`C2:|${tofC2}⟩`,18,y2+4);label(`T: |${tofT}⟩`,18,y3+4);
+    ctrlDot(gx,y1);ctrlDot(gx,y2);vert(gx,y1+5,y3-11);notSymbol(gx,y3);
+    const to2=tofC1===1&&tofC2===1?(tofT===0?1:0):tofT;
+    label(`|${tofC1}⟩`,W-32,y1+4);label(`|${tofC2}⟩`,W-32,y2+4);label(`|${to2}⟩`,W-32,y3+4);
+  }
+}
+
+/* ── BUILD TABS ── */
+function buildTabs(){
+  document.getElementById('gate-nav').innerHTML=GATES.map(g=>`
+    <button class="gate-tab${g.id===gId?' active':''}" data-id="${g.id}" onclick="selectGate('${g.id}')">
+      <span>${g.label}</span>
+      <span class="sub">${g.sub}</span>
+    </button>`).join('');
+}
+
+/* ── RENDER PANEL ── */
+function renderPanel(){
+  const g=GATES.find(x=>x.id===gId);
+  const isSingle=g.type==='single'||g.type==='param';
+  const isTwo=['cnot','cz','swap','toffoli'].includes(g.type);
+
+  document.getElementById('vis-panel').innerHTML=`
+  <div class="vis-panel-header">
+    <div>
+      <span class="gate-id">${g.label}</span>
+      <span class="gate-full"> — ${g.name}</span>
+    </div>
+    <code style="font-size:12px;color:var(--text2)">axis: ${g.axis}${g.angle?' | '+g.angle+'°':''}</code>
+  </div>
+  <div class="vis-panel-body">
+    <p style="font-size:14px;color:var(--text2);margin-bottom:10px">${g.desc}</p>
+
+    <details style="margin-bottom:14px;cursor:pointer">
+      <summary style="font-size:13px;color:var(--text2);list-style:none;display:flex;align-items:center;gap:6px;user-select:none">
+        <span style="color:var(--accent)">▶</span> Intuition &amp; wave analogy
+      </summary>
+      <div style="margin-top:8px;padding:12px 14px;background:var(--bg3);border-radius:6px;border:1px solid var(--border)">
+        <p style="font-size:13px;color:var(--text2);margin-bottom:8px"><strong style="color:var(--text)">Intuition:</strong> ${g.intuition}</p>
+        <p style="font-size:13px;color:var(--text2);margin:0"><strong style="color:var(--text)">Wave:</strong> ${g.wave}</p>
+      </div>
+    </details>
+
+    <details style="margin-bottom:16px;cursor:pointer">
+      <summary style="font-size:13px;color:var(--text2);list-style:none;display:flex;align-items:center;gap:6px;user-select:none">
+        <span style="color:var(--accent)">▶</span> Matrix
+      </summary>
+      <pre style="margin:8px 0 0"><code>${g.matrix}</code></pre>
+    </details>
+
+    ${isSingle ? renderSingleVis(g) : renderTwoVis(g)}
+  </div>`;
+
+  startAnim(g);
+}
+
+function renderSingleVis(g){
+  const p=probs(theta);
+  const isParam=g.type==='param';
+  return `
+  <div class="vis-grid">
+    <div class="vis-box">
+      <div class="vis-box-label">Bloch Sphere</div>
+      <canvas id="bloch-cv" width="200" height="200" style="width:100%;max-width:200px;margin:0 auto"></canvas>
+      <div class="bloch-state" id="bstate">${stateStr(theta)}</div>
+      <div class="prob-bar-wrap" style="margin-top:12px">
+        <div class="prob-row">
+          <span class="prob-lbl" style="color:#3fb950">|0⟩</span>
+          <div class="prob-track"><div class="prob-fill" id="pb0" style="width:${p.p0}%;background:#3fb950"></div></div>
+          <span class="prob-pct" id="pp0" style="color:#3fb950">${p.p0}%</span>
+        </div>
+        <div class="prob-row">
+          <span class="prob-lbl" style="color:#f87171">|1⟩</span>
+          <div class="prob-track"><div class="prob-fill" id="pb1" style="width:${p.p1}%;background:#f87171"></div></div>
+          <span class="prob-pct" id="pp1" style="color:#f87171">${p.p1}%</span>
+        </div>
+      </div>
+    </div>
+    <div class="vis-box">
+      <div class="vis-box-label">Controls</div>
+      <div class="ctrl-row">
+        <button class="ctrl-btn primary" onclick="applyGate()">Apply ${g.label}</button>
+        <button class="ctrl-btn" onclick="resetQ()">|0⟩</button>
+        <button class="ctrl-btn" onclick="setQ(Math.PI)">|1⟩</button>
+        <button class="ctrl-btn" onclick="setQ(Math.PI/2)">|+⟩</button>
+      </div>
+      ${isParam?`
+      <div style="margin-top:14px">
+        <div class="vis-box-label">Rotation angle θ</div>
+        <div class="slider-row">
+          <label>θ</label>
+          <input type="range" id="psl" min="0" max="360" step="1" value="${paramAngle}">
+          <span class="val" id="pval">${paramAngle}°</span>
+        </div>
+      </div>`:''}
+      <div style="margin-top:16px">
+        <div class="vis-box-label">Polar angle (θ on sphere)</div>
+        <div class="slider-row">
+          <label>θ</label>
+          <input type="range" id="tsl" min="0" max="314" step="1" value="${Math.round(theta*100)}">
+          <span class="val" id="tval">${(theta*180/Math.PI).toFixed(0)}°</span>
+        </div>
+        <div class="vis-box-label" style="margin-top:10px">Azimuthal angle (φ on sphere)</div>
+        <div class="slider-row">
+          <label>φ</label>
+          <input type="range" id="phl" min="0" max="628" step="1" value="${Math.round(phi*100)}">
+          <span class="val" id="phval">${(phi*180/Math.PI).toFixed(0)}°</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="vis-box" style="margin-top:0">
+    <div class="vis-box-label">Wave amplitude — probability amplitudes</div>
+    <canvas id="wave-cv" width="800" height="70" style="width:100%;border-radius:4px"></canvas>
+  </div>`;
+}
+
+function renderTwoVis(g){
+  const isEntangled=g.type==='cnot'&&ctrl===2;
+  const isTof=g.type==='toffoli';
+
+  let ctrlBtns='';
+  if(!isTof){
+    ctrlBtns=`
+      <div style="margin-bottom:10px">
+        <div class="vis-box-label">${g.type==='swap'?'Qubit A':'Control'}</div>
+        <div class="ctrl-row">
+          <button class="ctrl-btn${ctrl===0?' active':''}" onclick="setCtrl(0)">|0⟩</button>
+          <button class="ctrl-btn${ctrl===1?' active':''}" onclick="setCtrl(1)">|1⟩</button>
+          ${g.type==='cnot'?`<button class="ctrl-btn${ctrl===2?' active':''}" onclick="setCtrl(2)">|+⟩ superpos</button>`:''}
+        </div>
+      </div>
+      <div>
+        <div class="vis-box-label">${g.type==='swap'?'Qubit B':'Target'}</div>
+        <div class="ctrl-row">
+          <button class="ctrl-btn${tgt===0?' active':''}" onclick="setTgt(0)">|0⟩</button>
+          <button class="ctrl-btn${tgt===1?' active':''}" onclick="setTgt(1)">|1⟩</button>
+        </div>
+      </div>`;
+  } else {
+    ctrlBtns=`
+      <div style="margin-bottom:8px">
+        <div class="vis-box-label">Control 1</div>
+        <div class="ctrl-row">
+          <button class="ctrl-btn${tofC1===0?' active':''}" onclick="setTof('c1',0)">|0⟩</button>
+          <button class="ctrl-btn${tofC1===1?' active':''}" onclick="setTof('c1',1)">|1⟩</button>
+        </div>
+      </div>
+      <div style="margin-bottom:8px">
+        <div class="vis-box-label">Control 2</div>
+        <div class="ctrl-row">
+          <button class="ctrl-btn${tofC2===0?' active':''}" onclick="setTof('c2',0)">|0⟩</button>
+          <button class="ctrl-btn${tofC2===1?' active':''}" onclick="setTof('c2',1)">|1⟩</button>
+        </div>
+      </div>
+      <div>
+        <div class="vis-box-label">Target</div>
+        <div class="ctrl-row">
+          <button class="ctrl-btn${tofT===0?' active':''}" onclick="setTof('tgt',0)">|0⟩</button>
+          <button class="ctrl-btn${tofT===1?' active':''}" onclick="setTof('tgt',1)">|1⟩</button>
+        </div>
+      </div>`;
+  }
+
+  return `
+  <div class="vis-grid">
+    <div class="vis-box">
+      <div class="vis-box-label">Circuit</div>
+      <canvas id="circ-cv" width="340" height="160" style="width:100%;border-radius:4px"></canvas>
+    </div>
+    <div class="vis-box">
+      <div class="vis-box-label">Qubit Controls</div>
+      ${ctrlBtns}
+      <div class="ctrl-row" style="margin-top:12px">
+        <button class="ctrl-btn primary" onclick="applyTwo()">Apply ${g.label}</button>
+        <button class="ctrl-btn" onclick="resetTwo()">Reset</button>
+      </div>
+    </div>
+  </div>
+  ${isEntangled?`
+  <div class="entangle-box">
+    <strong>⚡ BELL STATE — ENTANGLED</strong>
+    State: (|00⟩ + |11⟩) / √2 — Measuring either qubit instantly determines the other.
+    <div class="bell-grid">
+      <div class="bell-cell"><div class="ket">|00⟩</div><div class="pct">50%</div></div>
+      <div class="bell-cell"><div class="ket">|01⟩</div><div class="pct">0%</div></div>
+      <div class="bell-cell"><div class="ket">|10⟩</div><div class="pct">0%</div></div>
+      <div class="bell-cell"><div class="ket">|11⟩</div><div class="pct">50%</div></div>
+    </div>
+  </div>`:''}
+  <div class="vis-box" style="margin-top:12px">
+    <div class="vis-box-label">Wave amplitude</div>
+    <canvas id="wave-cv" width="800" height="70" style="width:100%;border-radius:4px"></canvas>
+  </div>`;
+}
+
+/* ── ANIMATION LOOP ── */
+function startAnim(g){
+  if(rafId)cancelAnimationFrame(rafId);
+  function tick(){
+    wPhase+=0.033;
+    drawWave('wave-cv',g.id,wPhase,phi,paramAngle);
+    if(g.type==='single'||g.type==='param'){
+      drawBloch('bloch-cv',theta,phi,g.color);
+    } else {
+      drawCircuit('circ-cv',g);
+    }
+    rafId=requestAnimationFrame(tick);
+  }
+  tick();
+  attachSliders(g);
+}
+
+function attachSliders(g){
+  const tsl=document.getElementById('tsl');
+  const phl=document.getElementById('phl');
+  const psl=document.getElementById('psl');
+  if(tsl) tsl.addEventListener('input',()=>{
+    theta=tsl.value/100;
+    document.getElementById('tval').textContent=(theta*180/Math.PI).toFixed(0)+'°';
+    updateProbs();
+  });
+  if(phl) phl.addEventListener('input',()=>{
+    phi=phl.value/100;
+    document.getElementById('phval').textContent=(phi*180/Math.PI).toFixed(0)+'°';
+  });
+  if(psl) psl.addEventListener('input',()=>{
+    paramAngle=parseInt(psl.value);
+    document.getElementById('pval').textContent=paramAngle+'°';
+  });
+}
+
+function updateProbs(){
+  const p=probs(theta);
+  const pb0=document.getElementById('pb0'); if(pb0)pb0.style.width=p.p0+'%';
+  const pb1=document.getElementById('pb1'); if(pb1)pb1.style.width=p.p1+'%';
+  const pp0=document.getElementById('pp0'); if(pp0)pp0.textContent=p.p0+'%';
+  const pp1=document.getElementById('pp1'); if(pp1)pp1.textContent=p.p1+'%';
+  const bs=document.getElementById('bstate'); if(bs)bs.textContent=stateStr(theta);
+}
+
+/* ── ACTIONS ── */
+function selectGate(id){
+  gId=id; theta=0; phi=0; ctrl=0; tgt=0; ctrl2=0; tgt2=0; tofC1=0; tofC2=0; tofT=0;
+  document.querySelectorAll('.gate-tab').forEach(b=>b.classList.toggle('active',b.dataset.id===id));
+  renderPanel();
+}
+
+function applyGate(){
+  const g=GATES.find(x=>x.id===gId);
+  if(!g||!g.apply)return;
+  const a=g.type==='param'?paramAngle*Math.PI/180:0;
+  const [nt,np]=g.apply(theta,phi,a);
+  theta=mod(nt,TAU); phi=mod(np,TAU);
+  const tsl=document.getElementById('tsl'); if(tsl)tsl.value=Math.round(theta*100);
+  const tvl=document.getElementById('tval'); if(tvl)tvl.textContent=(theta*180/Math.PI).toFixed(0)+'°';
+  const phl=document.getElementById('phl'); if(phl)phl.value=Math.round(phi*100);
+  const pvl=document.getElementById('phval'); if(pvl)pvl.textContent=(phi*180/Math.PI).toFixed(0)+'°';
+  updateProbs();
+}
+function resetQ(){theta=0;phi=0;const tsl=document.getElementById('tsl');if(tsl)tsl.value=0;updateProbs();}
+function setQ(t){theta=t;phi=0;const tsl=document.getElementById('tsl');if(tsl)tsl.value=Math.round(t*100);updateProbs();}
+
+function setCtrl(v){ctrl=v; const g=GATES.find(x=>x.id===gId); renderPanel();}
+function setTgt(v){tgt=v; const g=GATES.find(x=>x.id===gId); renderPanel();}
+function setTof(w,v){if(w==='c1')tofC1=v;else if(w==='c2')tofC2=v;else tofT=v; renderPanel();}
+
+function applyTwo(){
+  const g=GATES.find(x=>x.id===gId);
+  if(g.type==='cnot'&&ctrl===2){renderPanel();return;}
+  if(g.type==='cnot'&&ctrl===1) tgt=tgt===0?1:0;
+  if(g.type==='swap'){const tmp=ctrl;ctrl=tgt;tgt=tmp===2?0:tmp;}
+  if(g.type==='toffoli'&&tofC1===1&&tofC2===1) tofT=tofT===0?1:0;
+  renderPanel();
+}
+function resetTwo(){ctrl=0;tgt=0;ctrl2=0;tgt2=0;tofC1=0;tofC2=0;tofT=0;renderPanel();}
+
+/* ── INIT ── */
+buildTabs();
+renderPanel();
+</script>
+
+</body>
+</html>
